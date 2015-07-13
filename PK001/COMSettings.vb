@@ -26,15 +26,45 @@
     Private Sub SaveComSettingsBtn_Click(sender As Object, e As EventArgs) Handles SaveComSettingsBtn.Click
         If newCOMSelect.SelectedItem IsNot Nothing Then
             My.Settings.ComNum = newCOMSelect.SelectedItem.ToString
-            MainForm.SerialPort.PortName = My.Settings.ComNum
+            If MainForm.SerialPort.IsOpen Then
+                Try
+                    MainForm.SerialPort.Close()
+                    MainForm.SerialPort.PortName = My.Settings.ComNum
+
+                    MainForm.SerialPort.Open()
+                Catch ex2 As Exception
+                    MsgBox("Failed open port")
+                End Try
+
+            End If
+
         End If
         If newSpeed.Text <> "" Then
             My.Settings.ComSpeed = newSpeed.Text
-            MainForm.SerialPort.BaudRate = My.Settings.ComSpeed
+            If MainForm.SerialPort.IsOpen Then
+                Try
+                    MainForm.SerialPort.Close()
+                    MainForm.SerialPort.BaudRate = My.Settings.ComSpeed
+                    MainForm.SerialPort.Open()
+                Catch ex2 As Exception
+                    MsgBox("Failed open port")
+                End Try
+
+            End If
+
         End If
         If newBits.Text <> "" Then
             My.Settings.ComBits = newBits.Text
-            MainForm.SerialPort.DataBits = My.Settings.ComBits
+            If MainForm.SerialPort.IsOpen Then
+                Try
+                    MainForm.SerialPort.Close()
+                    MainForm.SerialPort.DataBits = My.Settings.ComBits
+                    MainForm.SerialPort.Open()
+                Catch ex2 As Exception
+                    MsgBox("Failed open port")
+                End Try
+            End If
+
         End If
 
         Me.Close()
