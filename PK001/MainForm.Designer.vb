@@ -8,6 +8,7 @@ Partial Class MainForm
         Try
             If disposing AndAlso components IsNot Nothing Then
                 components.Dispose()
+                myConn.Dispose()
             End If
         Finally
             MyBase.Dispose(disposing)
