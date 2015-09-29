@@ -41,6 +41,7 @@ Partial Class MainForm
         Me.ReceiveTxt = New System.Windows.Forms.TextBox()
         Me.SendTxt = New System.Windows.Forms.TextBox()
         Me.checkForLabelTimer = New System.Windows.Forms.Timer(Me.components)
+        Me.Button2 = New System.Windows.Forms.Button()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.EventLog, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -64,7 +65,7 @@ Partial Class MainForm
         'ExitToolStripMenuItem
         '
         Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
-        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
+        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(92, 22)
         Me.ExitToolStripMenuItem.Text = "Exit"
         '
         'SettingsToolStripMenuItem
@@ -157,11 +158,21 @@ Partial Class MainForm
         '
         Me.checkForLabelTimer.Interval = 2000
         '
+        'Button2
+        '
+        Me.Button2.Location = New System.Drawing.Point(118, 184)
+        Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(75, 23)
+        Me.Button2.TabIndex = 6
+        Me.Button2.Text = "Button2"
+        Me.Button2.UseVisualStyleBackColor = True
+        '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(569, 365)
+        Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.SendTxt)
         Me.Controls.Add(Me.ReceiveTxt)
         Me.Controls.Add(Me.Button1)
@@ -196,5 +207,6 @@ Partial Class MainForm
     Friend WithEvents SendTxt As System.Windows.Forms.TextBox
     Friend WithEvents ReceiveTxt As System.Windows.Forms.TextBox
     Friend WithEvents checkForLabelTimer As System.Windows.Forms.Timer
+    Friend WithEvents Button2 As System.Windows.Forms.Button
 
 End Class
