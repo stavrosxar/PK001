@@ -89,6 +89,78 @@ Namespace My
                 Me("ComBits") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property host() As String
+            Get
+                Return CType(Me("host"),String)
+            End Get
+            Set
+                Me("host") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property port() As String
+            Get
+                Return CType(Me("port"),String)
+            End Get
+            Set
+                Me("port") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property serviceName() As String
+            Get
+                Return CType(Me("serviceName"),String)
+            End Get
+            Set
+                Me("serviceName") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property user() As String
+            Get
+                Return CType(Me("user"),String)
+            End Get
+            Set
+                Me("user") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property password() As String
+            Get
+                Return CType(Me("password"),String)
+            End Get
+            Set
+                Me("password") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
+        Public Property spare() As String
+            Get
+                Return CType(Me("spare"),String)
+            End Get
+            Set
+                Me("spare") = value
+            End Set
+        End Property
     End Class
 End Namespace
 

@@ -330,27 +330,12 @@ Public Class MainForm
         SendSerialData("|01RI" + Chr(13))
     End Sub
 
-    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
-        Dim strCon
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles oracleTestbtn.Click
+        DBFunctions.testConnectiivty()
 
+    End Sub
 
-        strCon = "Driver={Microsoft ODBC for Oracle}; " & _
-                 "CONNECTSTRING=(DESCRIPTION=" & _
-                 "(ADDRESS=(PROTOCOL=TCP)" & _
-                 "(HOST=WIN7-VM-SCS)(PORT=1521))" & _
-                 "(CONNECT_DATA=(SERVICE_NAME=XE))); uid=test;pwd=1234;"
-
-        Dim oCon = CreateObject("ADODB.Connection")
-
-        Dim oRs = CreateObject("ADODB.Recordset")
-        Try
-            oCon.Open(strCon)
-            MsgBox("Success")
-
-        Catch ex As Exception
-            MsgBox("Fail = " + ex.ToString)
-
-        End Try
-
+    Private Sub OracleDBConnectionSettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OracleDBConnectionSettingsToolStripMenuItem.Click
+        DBSettings.Show()
     End Sub
 End Class
