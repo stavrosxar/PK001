@@ -124,12 +124,23 @@ Public Class MainForm
         'TODO  connect to Oracle and send the query to database
         'then commit the changes
         'after that start the sequence for applying the label
+        Dim conResult = DBFunctions.insertToDB
+        If conResult = 2 Then
+            MsgBox("Problem inserting data to Database")
+            writetoLog("Problem inserting data to Database")
+            Exit Sub
+        End If
+        If conResult = 0 Then
+            MsgBox("Problem connecting to Database")
+            Exit Sub
+        End If
+        applyLabelRequest = True
         initiatePrintSeq()
     End Sub
 
     Private Sub dataReceived(sender As Object, e As IO.Ports.SerialDataReceivedEventArgs) Handles SerialPort.DataReceived
         Try
-            Dim incoming As String = SerialPort.ReadLine
+            Dim incoming As String = SerialPort.ReadExisting
             ReceiveTxt.Text = incoming
             SerialInputManipulation(incoming)
         Catch ex As Exception
@@ -338,4 +349,16 @@ Public Class MainForm
     Private Sub OracleDBConnectionSettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OracleDBConnectionSettingsToolStripMenuItem.Click
         DBSettings.Show()
     End Sub
+
+    Private Sub Button2_Click_1(sender As Object, e As EventArgs) Handles Button2.Click
+        applyLabelRequest = True
+        initiatePrintSeq()
+
+    End Sub
+
+
+    Public Function writetoLog(ByVal str As String)
+        EventLog.WriteEntry(str)
+        Return 0
+    End Function
 End Class

@@ -30,6 +30,7 @@ Partial Class MainForm
         Me.SettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SerialCOMSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PLCConnectionSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OracleDBConnectionSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SerialPort = New System.IO.Ports.SerialPort(Me.components)
         Me.StatusStrip = New System.Windows.Forms.StatusStrip()
@@ -42,7 +43,7 @@ Partial Class MainForm
         Me.SendTxt = New System.Windows.Forms.TextBox()
         Me.checkForLabelTimer = New System.Windows.Forms.Timer(Me.components)
         Me.oracleTestbtn = New System.Windows.Forms.Button()
-        Me.OracleDBConnectionSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Button2 = New System.Windows.Forms.Button()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.EventLog, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -88,6 +89,12 @@ Partial Class MainForm
         Me.PLCConnectionSettingsToolStripMenuItem.Size = New System.Drawing.Size(245, 22)
         Me.PLCConnectionSettingsToolStripMenuItem.Text = "PLC Connection Settings..."
         '
+        'OracleDBConnectionSettingsToolStripMenuItem
+        '
+        Me.OracleDBConnectionSettingsToolStripMenuItem.Name = "OracleDBConnectionSettingsToolStripMenuItem"
+        Me.OracleDBConnectionSettingsToolStripMenuItem.Size = New System.Drawing.Size(245, 22)
+        Me.OracleDBConnectionSettingsToolStripMenuItem.Text = "Oracle DB Connection Settings..."
+        '
         'AboutToolStripMenuItem
         '
         Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
@@ -96,6 +103,8 @@ Partial Class MainForm
         '
         'SerialPort
         '
+        Me.SerialPort.BaudRate = 19200
+        Me.SerialPort.PortName = "COM2"
         '
         'StatusStrip
         '
@@ -169,17 +178,22 @@ Partial Class MainForm
         Me.oracleTestbtn.Text = "Test Oracle Connection"
         Me.oracleTestbtn.UseVisualStyleBackColor = True
         '
-        'OracleDBConnectionSettingsToolStripMenuItem
+        'Button2
         '
-        Me.OracleDBConnectionSettingsToolStripMenuItem.Name = "OracleDBConnectionSettingsToolStripMenuItem"
-        Me.OracleDBConnectionSettingsToolStripMenuItem.Size = New System.Drawing.Size(245, 22)
-        Me.OracleDBConnectionSettingsToolStripMenuItem.Text = "Oracle DB Connection Settings..."
+        Me.Button2.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Button2.Location = New System.Drawing.Point(312, 183)
+        Me.Button2.Name = "Button2"
+        Me.Button2.Size = New System.Drawing.Size(194, 59)
+        Me.Button2.TabIndex = 7
+        Me.Button2.Text = "Test Sequence"
+        Me.Button2.UseVisualStyleBackColor = True
         '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(569, 365)
+        Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.oracleTestbtn)
         Me.Controls.Add(Me.SendTxt)
         Me.Controls.Add(Me.ReceiveTxt)
@@ -217,5 +231,6 @@ Partial Class MainForm
     Friend WithEvents checkForLabelTimer As System.Windows.Forms.Timer
     Friend WithEvents oracleTestbtn As System.Windows.Forms.Button
     Friend WithEvents OracleDBConnectionSettingsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents Button2 As System.Windows.Forms.Button
 
 End Class
