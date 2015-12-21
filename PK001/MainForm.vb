@@ -124,7 +124,7 @@ Public Class MainForm
         'TODO  connect to Oracle and send the query to database
         'then commit the changes
         'after that start the sequence for applying the label
-        Dim conResult = DBFunctions.insertToDB
+        Dim conResult = DBFunctions.insertToDB(rollWidth, rollWeight, rollDiameter)
         If conResult = 2 Then
             MsgBox("Problem inserting data to Database")
             writetoLog("Problem inserting data to Database")

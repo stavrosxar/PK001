@@ -25,7 +25,7 @@
         Return 0
     End Function
 
-    Public Function insertToDB() As Integer
+    Public Function insertToDB(ByVal rollWidth As Integer, ByVal rollWeight As Double, ByVal rollDiameter As Integer) As Integer
         Dim result As Integer
         'write code for inserting data to DB 
         'first test connectivity 
