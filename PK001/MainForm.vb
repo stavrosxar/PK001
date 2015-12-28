@@ -1,7 +1,7 @@
 ﻿Imports DotNetSiemensPLCToolBoxLibrary.Communication
 Imports DotNetSiemensPLCToolBoxLibrary.DataTypes
 Imports DotNetSiemensPLCToolBoxLibrary
-Imports Oracle.DataAccess.Client.OracleConnection
+
 
 Public Class MainForm
     Dim myConn As New PLCConnection("ATF PLC Connection")
@@ -124,7 +124,7 @@ Public Class MainForm
         'TODO  connect to Oracle and send the query to database
         'then commit the changes
         'after that start the sequence for applying the label
-        Dim conResult = DBFunctions.insertToDB(rollWidth, rollWeight, rollDiameter)
+        Dim conResult = DBFunctions.insertToDB(rollWidth, rollWeight, rollDiameter, 2)
         If conResult = 2 Then
             MsgBox("Problem inserting data to Database")
             writetoLog("Problem inserting data to Database")
@@ -361,4 +361,22 @@ Public Class MainForm
         EventLog.WriteEntry(str)
         Return 0
     End Function
+
+    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+        Dim conResult = DBFunctions.insertToDB(100.1, 100.2, 100.4, 2)
+        'evaluate result
+        Select Case conResult
+            Case 0
+                StatusStrip.Text = "Failed to connect to Database. Review Log"
+                StatusStrip.BackColor = Color.Red
+            Case 1
+                StatusStrip.Text = "Transaction with Database succesfull"
+                StatusStrip.BackColor = Color.Green
+            Case 2
+                StatusStrip.Text = "Failed to finish transaction. Review Log"
+                StatusStrip.BackColor = Color.Red
+        End Select
+
+     
+    End Sub
 End Class

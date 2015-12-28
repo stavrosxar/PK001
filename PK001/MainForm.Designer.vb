@@ -44,6 +44,7 @@ Partial Class MainForm
         Me.checkForLabelTimer = New System.Windows.Forms.Timer(Me.components)
         Me.oracleTestbtn = New System.Windows.Forms.Button()
         Me.Button2 = New System.Windows.Forms.Button()
+        Me.Button3 = New System.Windows.Forms.Button()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.EventLog, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -181,18 +182,28 @@ Partial Class MainForm
         'Button2
         '
         Me.Button2.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button2.Location = New System.Drawing.Point(312, 183)
+        Me.Button2.Location = New System.Drawing.Point(315, 145)
         Me.Button2.Name = "Button2"
         Me.Button2.Size = New System.Drawing.Size(194, 59)
         Me.Button2.TabIndex = 7
         Me.Button2.Text = "Test Sequence"
         Me.Button2.UseVisualStyleBackColor = True
         '
+        'Button3
+        '
+        Me.Button3.Location = New System.Drawing.Point(312, 230)
+        Me.Button3.Name = "Button3"
+        Me.Button3.Size = New System.Drawing.Size(196, 37)
+        Me.Button3.TabIndex = 8
+        Me.Button3.Text = "Button3"
+        Me.Button3.UseVisualStyleBackColor = True
+        '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(569, 365)
+        Me.Controls.Add(Me.Button3)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.oracleTestbtn)
         Me.Controls.Add(Me.SendTxt)
@@ -232,5 +243,6 @@ Partial Class MainForm
     Friend WithEvents oracleTestbtn As System.Windows.Forms.Button
     Friend WithEvents OracleDBConnectionSettingsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Button2 As System.Windows.Forms.Button
+    Friend WithEvents Button3 As System.Windows.Forms.Button
 
 End Class
