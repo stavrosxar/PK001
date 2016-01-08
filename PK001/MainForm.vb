@@ -17,6 +17,7 @@ Public Class MainForm
     '4 Step4 is finished (Blow disabled)
     '5 Step5 is finished (Cycle completed)
     '6 Error has occured
+    Dim labelCheckCounter As Integer
 
 
     Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
@@ -31,6 +32,7 @@ Public Class MainForm
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         EventLog.BeginInit()
         EventLog.Source = "PK-ATF"
+        labelCheckCounter = 0
     End Sub
 
     Private Sub PLCConnectionSettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PLCConnectionSettingsToolStripMenuItem.Click
@@ -218,16 +220,25 @@ Public Class MainForm
             Select Case printerStatusStr
                 Case "0"
                     printerStatus = 0 ' Printer OK.The application arm is in start position
+                    StatusStrip.Text = "Printer OK.The application arm is in start position"
                 Case "1"
                     printerStatus = 1 ' Error during return
+                    StatusStrip.Text = "Error during return"
+                    applyLabelRequest = False
                 Case "2"
                     printerStatus = 2 'Error during forward movement
+                    StatusStrip.Text = "Error during forward movement"
+                    applyLabelRequest = False
                 Case "3"
                     printerStatus = 3 'No label on the pad
+                 
                 Case "4"
                     printerStatus = 4 'Object not found
+                    StatusStrip.Text = "Object not found"
+                    applyLabelRequest = False
                 Case "A"
                     printerStatus = 5 'Cycle completed
+                    StatusStrip.Text = "Cycle completed"
             End Select
 
             'if for any reason the printer is in error mode then we must reset the error and then send any other command
@@ -279,6 +290,7 @@ Public Class MainForm
                     applyLabelStatus = 2
                     initiatePrintSeq()
                     checkForLabelTimer.Enabled = False
+                    labelCheckCounter = 0
                 Else
                     'start a 2sec loop for checking the status of the inputs until label is on the pad
                     'or a specific ammount of tries has passed i.e 20 times = 20 x 2 sec = 40sec waiting for 
@@ -339,6 +351,11 @@ Public Class MainForm
 
     Private Sub checkForLabelTimer_Tick(sender As Object, e As EventArgs) Handles checkForLabelTimer.Tick
         SendSerialData("|01RI" + Chr(13))
+        labelCheckCounter = labelCheckCounter + 1
+        If labelCheckCounter = 20 Then
+            applyLabelRequest = False
+            StatusStrip.Text = "No label found on the pad after 40 seconds"
+        End If
     End Sub
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles oracleTestbtn.Click

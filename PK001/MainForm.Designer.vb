@@ -172,7 +172,7 @@ Partial Class MainForm
         'oracleTestbtn
         '
         Me.oracleTestbtn.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.oracleTestbtn.Location = New System.Drawing.Point(54, 183)
+        Me.oracleTestbtn.Location = New System.Drawing.Point(54, 145)
         Me.oracleTestbtn.Name = "oracleTestbtn"
         Me.oracleTestbtn.Size = New System.Drawing.Size(194, 59)
         Me.oracleTestbtn.TabIndex = 6
@@ -195,7 +195,7 @@ Partial Class MainForm
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(196, 37)
         Me.Button3.TabIndex = 8
-        Me.Button3.Text = "Button3"
+        Me.Button3.Text = "Test DB write"
         Me.Button3.UseVisualStyleBackColor = True
         '
         'MainForm
