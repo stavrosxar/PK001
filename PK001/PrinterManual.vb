@@ -13,9 +13,9 @@
         Dim BlowString As String
        
         If MainForm.blowStatus Then
-            BlowString = "|SO0" + Chr(13)
+            BlowString = "|01SO0" + Chr(13)
         Else
-            BlowString = "|SO1" + Chr(13)
+            BlowString = "|01SO1" + Chr(13)
         End If
         MainForm.SendSerialData(BlowString)
     End Sub
@@ -23,9 +23,9 @@
     Private Sub SucctionBtn_Click(sender As Object, e As EventArgs) Handles SucctionBtn.Click
         Dim SuctionString As String
         If MainForm.suctionStatus Then
-            SuctionString = "|AO0" + Chr(13)
+            SuctionString = "|01AS0" + Chr(13)
         Else
-            SuctionString = "|AO1" + Chr(13)
+            SuctionString = "|01AS1" + Chr(13)
         End If
         MainForm.SendSerialData(SuctionString)
     End Sub

@@ -18,6 +18,9 @@ Public Class MainForm
     '5 Step5 is finished (Cycle completed)
     '6 Error has occured
     Dim labelCheckCounter As Integer
+    Dim timer100sec As Boolean
+    Dim timer1sec As Boolean
+    Dim CommandSend As Boolean
 
 
     Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
@@ -137,6 +140,7 @@ Public Class MainForm
             Exit Sub
         End If
         applyLabelRequest = True
+        CommandSend = False
         initiatePrintSeq()
     End Sub
 
@@ -177,16 +181,16 @@ Public Class MainForm
                 SendSerialData(str)
 
             Catch ex1 As Exception
-                MsgBox("Cannot open serial port")
+                ' MsgBox("Cannot open serial port")
             End Try
         End If
 
     End Sub
 
     Private Sub SerialInputManipulation(ByVal str As String)
-        Dim typeofReply As String = str.Substring(0, 4)
+        Dim typeofReply As String = str.Substring(0, 5)
 
-
+        'MsgBox(str)
         'Standar and typical replies
         Select Case str
             Case "|01SO0" + Chr(13) ' blow is disabled
@@ -231,7 +235,9 @@ Public Class MainForm
                     applyLabelRequest = False
                 Case "3"
                     printerStatus = 3 'No label on the pad
-                 
+                    applyLabelRequest = False
+                    applyLabelStatus = 0
+                    StatusStrip.Text = "No label on the pad"
                 Case "4"
                     printerStatus = 4 'Object not found
                     StatusStrip.Text = "Object not found"
@@ -264,11 +270,20 @@ Public Class MainForm
                     applicationArmStatus = 5 'Arm has found the object
             End Select
 
-            If (str = "|01ST020" Or str = "|01STA20") And applyLabelRequest Then
+            If (str = "|01ST020" Or str = "|01STA20" Or str = "|01ST320" Or str = "|01AENI" + Chr(13)) And applyLabelRequest Then
                 applyLabelStatus = 5
                 'if we need to update something this is the trigger
                 initiatePrintSeq() ' this 
+
+
             End If
+
+        End If
+        If (str = "|01AENI" + Chr(13) Or str = "|01ST020" + Chr(13)) And applyLabelRequest Then
+            applyLabelStatus = 5
+            'if we need to update something this is the trigger
+            initiatePrintSeq() ' this 
+
 
         End If
 
@@ -276,6 +291,9 @@ Public Class MainForm
         If str = "|01RE" + Chr(13) Then 'if we receive a message that a alarm reset has been applied then request a status update
             Dim getStatusString = "|01ST" + Chr(13)
             SendSerialData(getStatusString)
+            If applyLabelStatus > 0 Then
+                applyLabelStatus = 0
+            End If
         End If
 
         If typeofReply = "|01RI" Then
@@ -283,9 +301,10 @@ Public Class MainForm
 
             'the following code has to change in the if-section so it an match the inputs of the printer
             Dim HEXcodeOfInputs As String = str.Substring(6, 2)
-            Dim DECcodeofInputs = Convert.ToInt32(HEXcodeOfInputs, 16)
+            ' Dim DECcodeofInputs = Convert.ToInt32(HEXcodeOfInputs, 16)
+            ' MsgBox(HEXcodeOfInputs)
             If applyLabelRequest Then
-                If DECcodeofInputs = 1 Then
+                If HEXcodeOfInputs = 5 Then
                     'this means that a label is on pad so we can continue
                     applyLabelStatus = 2
                     initiatePrintSeq()
@@ -311,31 +330,51 @@ Public Class MainForm
         If applyLabelRequest = False Then
             Exit Sub
         End If
+        Label2.Text = applyLabelStatus
         If applyLabelRequest And applyLabelStatus = 0 Then
             'send command to enable blower 
             SendSerialData("|01SO1" + Chr(13))
+            LabelStatusTxt.Text = "send command to enable blower "
+            TimerTick1sec.Enabled = True
+            'Exit Sub
         End If
 
-        If applyLabelRequest And applyLabelStatus = 1 Then
+        If applyLabelRequest And applyLabelStatus = 1 And timer100sec Then
             'send command to check for label on pad
             SendSerialData("|01RI" + Chr(13))
+            LabelStatusTxt.Text = "send command to check for label on pad"
+
         End If
 
-        If applyLabelRequest And applyLabelStatus = 2 Then
+        If applyLabelRequest And applyLabelStatus = 2 And timer1sec Then
             'send command to enable suction
-            SendSerialData("|01AS01" + Chr(13))
+            TimerTick1sec.Enabled = False
+            SendSerialData("|01AS1" + Chr(13))
+            LabelStatusTxt.Text = "send command to enable suction"
+            Exit Sub
         End If
-        If applyLabelRequest And applyLabelStatus = 3 Then
+
+        If applyLabelRequest And applyLabelStatus = 3 And timer1sec Then
             'send command to disable blow
             SendSerialData("|01SO0" + Chr(13))
+            LabelStatusTxt.Text = "send command to disable blow"
+            Exit Sub
         End If
-        If applyLabelRequest And applyLabelStatus = 4 Then
+        If applyLabelRequest And applyLabelStatus = 4 And timer1sec And CommandSend = False Then
             'send command to start application cycle
             SendSerialData("|01AENI" + Chr(13))
+            'SendSerialData("|01ST" + Chr(13))
+            CommandSend = True
+            LabelStatusTxt.Text = "send command to start application cycle"
         End If
-        If applyLabelRequest And applyLabelStatus = 5 Then
+        If applyLabelRequest And applyLabelStatus = 4 And timer1sec And CommandSend = True Then
+            'send command to start application cycle
+            SendSerialData("|01ST" + Chr(13))
+            LabelStatusTxt.Text = "send command to start application cycle"
+        End If
+        If applyLabelRequest And applyLabelStatus = 5 And timer1sec Then
             'if we need to trigger something this is the trigger
-
+            LabelStatusTxt.Text = "Ended cycle"
             Dim val1 As New Communication.PLCTag("DB98.DBW0")
             val1.Controlvalue = 0
             Try
@@ -344,7 +383,9 @@ Public Class MainForm
 
             End Try
             applyLabelStatus = 0
+            Label2.Text = applyLabelStatus
             applyLabelRequest = False
+            SendSerialData("|01RE" + Chr(13))
         End If
 
     End Sub
@@ -352,6 +393,7 @@ Public Class MainForm
     Private Sub checkForLabelTimer_Tick(sender As Object, e As EventArgs) Handles checkForLabelTimer.Tick
         SendSerialData("|01RI" + Chr(13))
         labelCheckCounter = labelCheckCounter + 1
+        StatusStrip.Text = "Waiting for label on pad"
         If labelCheckCounter = 20 Then
             applyLabelRequest = False
             StatusStrip.Text = "No label found on the pad after 40 seconds"
@@ -369,7 +411,9 @@ Public Class MainForm
 
     Private Sub Button2_Click_1(sender As Object, e As EventArgs) Handles Button2.Click
         applyLabelRequest = True
+        CommandSend = False
         initiatePrintSeq()
+
 
     End Sub
 
@@ -394,6 +438,28 @@ Public Class MainForm
                 StatusStrip.BackColor = Color.Red
         End Select
 
-     
+
+    End Sub
+
+    Private Sub TimerTick1sec_Tick(sender As Object, e As EventArgs) Handles TimerTick1sec.Tick
+        If timer100sec Then
+            timer100sec = False
+            Label1.Text = "0"
+        Else
+            timer100sec = True
+            Label1.Text = "1"
+            initiatePrintSeq()
+        End If
+    End Sub
+
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        If timer1sec Then
+            timer1sec = False
+
+        Else
+            timer1sec = True
+
+            initiatePrintSeq()
+        End If
     End Sub
 End Class

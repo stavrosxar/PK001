@@ -45,6 +45,11 @@ Partial Class MainForm
         Me.oracleTestbtn = New System.Windows.Forms.Button()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Button3 = New System.Windows.Forms.Button()
+        Me.LabelStatusTxt = New System.Windows.Forms.TextBox()
+        Me.TimerTick1sec = New System.Windows.Forms.Timer(Me.components)
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.MenuStrip1.SuspendLayout()
         CType(Me.EventLog, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -54,7 +59,7 @@ Partial Class MainForm
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.SettingsToolStripMenuItem, Me.AboutToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(569, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(573, 24)
         Me.MenuStrip1.TabIndex = 0
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -109,9 +114,9 @@ Partial Class MainForm
         '
         'StatusStrip
         '
-        Me.StatusStrip.Location = New System.Drawing.Point(0, 343)
+        Me.StatusStrip.Location = New System.Drawing.Point(0, 355)
         Me.StatusStrip.Name = "StatusStrip"
-        Me.StatusStrip.Size = New System.Drawing.Size(569, 22)
+        Me.StatusStrip.Size = New System.Drawing.Size(573, 22)
         Me.StatusStrip.TabIndex = 1
         Me.StatusStrip.Text = "StatusStrip1"
         '
@@ -151,7 +156,7 @@ Partial Class MainForm
         'ReceiveTxt
         '
         Me.ReceiveTxt.ForeColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.ReceiveTxt.Location = New System.Drawing.Point(12, 320)
+        Me.ReceiveTxt.Location = New System.Drawing.Point(11, 299)
         Me.ReceiveTxt.Name = "ReceiveTxt"
         Me.ReceiveTxt.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
         Me.ReceiveTxt.Size = New System.Drawing.Size(553, 20)
@@ -160,7 +165,7 @@ Partial Class MainForm
         'SendTxt
         '
         Me.SendTxt.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.SendTxt.Location = New System.Drawing.Point(12, 294)
+        Me.SendTxt.Location = New System.Drawing.Point(12, 273)
         Me.SendTxt.Name = "SendTxt"
         Me.SendTxt.Size = New System.Drawing.Size(552, 20)
         Me.SendTxt.TabIndex = 5
@@ -198,11 +203,49 @@ Partial Class MainForm
         Me.Button3.Text = "Test DB write"
         Me.Button3.UseVisualStyleBackColor = True
         '
+        'LabelStatusTxt
+        '
+        Me.LabelStatusTxt.ForeColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.LabelStatusTxt.Location = New System.Drawing.Point(11, 325)
+        Me.LabelStatusTxt.Name = "LabelStatusTxt"
+        Me.LabelStatusTxt.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.LabelStatusTxt.Size = New System.Drawing.Size(553, 20)
+        Me.LabelStatusTxt.TabIndex = 9
+        '
+        'TimerTick1sec
+        '
+        Me.TimerTick1sec.Interval = 3000
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(525, 242)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(39, 13)
+        Me.Label1.TabIndex = 10
+        Me.Label1.Text = "Label1"
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(528, 196)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(0, 13)
+        Me.Label2.TabIndex = 11
+        '
+        'Timer1
+        '
+        Me.Timer1.Enabled = True
+        Me.Timer1.Interval = 2000
+        '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(569, 365)
+        Me.ClientSize = New System.Drawing.Size(573, 377)
+        Me.Controls.Add(Me.Label2)
+        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.LabelStatusTxt)
         Me.Controls.Add(Me.Button3)
         Me.Controls.Add(Me.Button2)
         Me.Controls.Add(Me.oracleTestbtn)
@@ -244,5 +287,10 @@ Partial Class MainForm
     Friend WithEvents OracleDBConnectionSettingsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Button2 As System.Windows.Forms.Button
     Friend WithEvents Button3 As System.Windows.Forms.Button
+    Friend WithEvents LabelStatusTxt As System.Windows.Forms.TextBox
+    Friend WithEvents TimerTick1sec As System.Windows.Forms.Timer
+    Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents Timer1 As System.Windows.Forms.Timer
 
 End Class

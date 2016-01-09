@@ -34,7 +34,7 @@
         Dim strSql As String
         Dim id As Double
         id = getMaxID()
-        strSql = "INSERT INTO ""FYLWS.PR_FYLWS_ATF_ROLLS"" " _
+        strSql = "INSERT INTO PR_FYLWS_ATF_ROLLS " _
                  & "( ID, ATF_DTINS, ATF_ROLL_ACTUAL_WEIGHT, ATF_ROLL_ACTUAL_DIAM, ATF_ROLL_ACTUAL_WIDTH, ATF_ROLL_ACTUAL_LENGTH)" _
                  & "VALUES ( '" & id & "', " _
                  & " SYSDATE, " _
