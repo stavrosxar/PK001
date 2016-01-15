@@ -52,6 +52,7 @@
                 'DBconnected = False
                 result = 1
             Catch e As Exception
+                MsgBox(e.ToString)
                 MainForm.writetoLog(e.ToString)
                 result = 2
             End Try
@@ -99,7 +100,7 @@
         Dim result As Double
         Dim strSql As String
 
-        strSql = "select MAX(ID)+1 from ""FYLWS.PR_FYLWS_ATF_ROLLS"""
+        strSql = "select MAX(ID)+1 from PR_FYLWS_ATF_ROLLS"
 
         Dim Rs = CreateObject("ADODB.Recordset")
         If DBconnected Then
