@@ -55,15 +55,15 @@ Public Class MainForm
                 EventLog.WriteEntry("Problem at disconnection." + ex1.Message.ToString)
             End Try
         Else
-                Try
-                    myConn.Connect()
+            Try
+                myConn.Connect()
                 PLCUpdate.Enabled = True
                 PLCConn.Text = "Stop PLC Communication"
-                Catch ex As Exception
+            Catch ex As Exception
                 MsgBox("No connection could be made. Please check your settings")
 
                 EventLog.WriteEntry("Problem at connection to PLC." + ex.Message.ToString)
-                End Try
+            End Try
         End If
     End Sub
 
@@ -102,12 +102,18 @@ Public Class MainForm
         Dim success As Boolean
         Dim lst As New List(Of PLCTag)
 
+        Dim rollATFID As New Communication.PLCTag("DB97.DBD0")
+        rollATFID.TagDataType = TagDataType.CharArray
+        rollATFID.ArraySize = 20
         Dim rollWidth As New Communication.PLCTag("DB97.DBW24")
+        Dim rollLength As New Communication.PLCTag("DB97.DBD26")
 
         Dim rollWeight As New Communication.PLCTag("DB97.DBD30")
         Dim rollDiameter As New Communication.PLCTag("DB97.DBW38")
 
+        lst.Add(rollATFID)
         lst.Add(rollWidth)
+        lst.Add(rollLength)
         lst.Add(rollWeight)
         lst.Add(rollDiameter)
         Try
@@ -119,17 +125,17 @@ Public Class MainForm
         End Try
 
         If success Then
-            writeDatatoOracle(rollWidth.Value.ToString, rollWeight.Value.ToString, rollDiameter.Value.ToString)
+            writeDatatoOracle(rollATFID.ValueAsString, rollWidth.ValueAsString, rollWeight.ValueAsString, rollDiameter.ValueAsString, rollLength.ValueAsString)
         End If
         'TODO get the values from the PLC and store them in local variables also set a value that you had read the values 
         'at the end call the write to DB function
     End Sub
 
-    Private Sub writeDatatoOracle(ByVal rollWidth As Integer, ByVal rollWeight As Double, ByVal rollDiameter As Integer)
+    Private Sub writeDatatoOracle(ByVal rollATFID As String, ByVal rollWidth As Integer, ByVal rollWeight As Double, ByVal rollDiameter As Integer, ByVal rollLength As Integer)
         'TODO  connect to Oracle and send the query to database
         'then commit the changes
         'after that start the sequence for applying the label
-        Dim conResult = DBFunctions.insertToDB(rollWidth, rollWeight, rollDiameter, 2)
+        Dim conResult = DBFunctions.insertToDB(rollATFID, rollWidth, rollWeight, rollDiameter, rollLength)
         If conResult = 2 Then
             MsgBox("Problem inserting data to Database")
             writetoLog("Problem inserting data to Database")
