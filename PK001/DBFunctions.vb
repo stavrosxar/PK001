@@ -31,13 +31,15 @@
         Dim result As Integer
         'write code for inserting data to DB 
         'first test connectivity 
+        'testfor commit
         Dim strSql As String
         Dim id As Double
         id = getMaxID()
         strSql = "INSERT INTO PR_FYLWS_ATF_ROLLS " _
-                 & "( ID, ATF_DTINS, ATF_ROLL_ACTUAL_WEIGHT, ATF_ROLL_ACTUAL_DIAM, ATF_ROLL_ACTUAL_WIDTH, ATF_ROLL_ACTUAL_LENGTH, ATF_ID)" _
+                 & "( ID, ATF_DTINS, ATF_ROLLID, ATF_ROLL_ACTUAL_WEIGHT, ATF_ROLL_ACTUAL_DIAM, ATF_ROLL_ACTUAL_WIDTH, ATF_ROLL_ACTUAL_LENGTH, ATF_ID)" _
                  & "VALUES ( '" & id & "', " _
                  & " SYSDATE, " _
+                 & "' " & rollATFID & "', " _
                  & "' " & rollWeight & "', " _
                  & "' " & rollDiameter & "', " _
                  & "' " & rollWidth & "', " _
@@ -61,12 +63,13 @@
             'if success then result = 1
             'if failure to insert then result = 2
         Else
+            'if not connected try to connect and attempt one more time to insert the values
             Dim conRes = connectToDB()
 
             If conRes = 0 Then 'if failure to connect
                 result = 0
             Else
-                insertToDB(rollWidth, rollWeight, rollDiameter, rollLength)
+                insertToDB(rollATFID, rollWidth, rollWeight, rollDiameter, rollLength)
             End If
         End If
         Return result

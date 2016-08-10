@@ -21,6 +21,7 @@ Public Class MainForm
     Dim timer100sec As Boolean
     Dim timer1sec As Boolean
     Dim CommandSend As Boolean
+    Dim rollUnderPrinter As Boolean
 
 
     Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
@@ -87,7 +88,11 @@ Public Class MainForm
         printReadyTag.DataTypeStringFormat = TagDisplayDataType.Decimal
         If myConn.Connected Then
             myConn.ReadValue(printReadyTag)
+            If rollUnderPrinter Then
+                Exit Sub
+            End If
             If printReadyTag.DataTypeStringFormat = 1 Then
+                rollUnderPrinter = True
                 getValuesFromPLC()
             Else
                 'exit sub
@@ -303,10 +308,8 @@ Public Class MainForm
         End If
 
         If typeofReply = "|01RI" Then
-            'TODO check the return of the printer for the status of the inputs and then implement this part of the code
-
-            'the following code has to change in the if-section so it an match the inputs of the printer
             Dim HEXcodeOfInputs As String = str.Substring(6, 2)
+            ' debug code leave it as it is
             ' Dim DECcodeofInputs = Convert.ToInt32(HEXcodeOfInputs, 16)
             ' MsgBox(HEXcodeOfInputs)
             If applyLabelRequest Then
@@ -390,7 +393,11 @@ Public Class MainForm
             End Try
             applyLabelStatus = 0
             Label2.Text = applyLabelStatus
+            'reset label request
             applyLabelRequest = False
+            'listen again for new roll under printer
+            rollUnderPrinter = False
+            'reset any errors if any
             SendSerialData("|01RE" + Chr(13))
         End If
 
@@ -430,7 +437,7 @@ Public Class MainForm
     End Function
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-        Dim conResult = DBFunctions.insertToDB(100.1, 100.2, 100.4, 2)
+        Dim conResult = DBFunctions.insertToDB("TEST", 100.1, 100.2, 100.4, 2)
         'evaluate result
         Select Case conResult
             Case 0
