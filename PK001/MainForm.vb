@@ -22,6 +22,7 @@ Public Class MainForm
     Dim timer1sec As Boolean
     Dim CommandSend As Boolean
     Dim rollUnderPrinter As Boolean
+    Dim palletisbeingread As Boolean
 
 
     Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
@@ -84,9 +85,9 @@ Public Class MainForm
     End Sub
 
     Private Sub PLCUpdate_Tick(sender As Object, e As EventArgs) Handles PLCUpdate.Tick
-        Dim printReadyTag As New Communication.PLCTag("DB97.DBW50")
+        Dim printReadyTag As New Communication.PLCTag("DB98.DBW0")
         printReadyTag.DataTypeStringFormat = TagDisplayDataType.Decimal
-        If myConn.Connected Then
+               If myConn.Connected Then
             myConn.ReadValue(printReadyTag)
             If rollUnderPrinter Then
                 Exit Sub
@@ -108,17 +109,20 @@ Public Class MainForm
         Dim lst As New List(Of PLCTag)
 
         Dim rollATFID As New Communication.PLCTag("DB97.DBD0")
-        rollATFID.TagDataType = TagDataType.CharArray
-        rollATFID.ArraySize = 20
-        Dim rollWidth As New Communication.PLCTag("DB97.DBW24")
-        Dim rollLength As New Communication.PLCTag("DB97.DBD26")
+        rollATFID.TagDataType = TagDataType.Int
+        Dim rollWidth As New Communication.PLCTag("DB97.DBW2")
+        rollWidth.TagDataType = TagDataType.Int
+        'Dim rollLength As New Communication.PLCTag("DB97.DBD26")
 
-        Dim rollWeight As New Communication.PLCTag("DB97.DBD30")
-        Dim rollDiameter As New Communication.PLCTag("DB97.DBW38")
+
+        Dim rollWeight As New Communication.PLCTag("DB97.DBD4")
+        rollWeight.TagDataType = TagDataType.Float
+        Dim rollDiameter As New Communication.PLCTag("DB97.DBW8")
+        rollDiameter.TagDataType = TagDataType.Int
 
         lst.Add(rollATFID)
         lst.Add(rollWidth)
-        lst.Add(rollLength)
+        'lst.Add(rollLength)
         lst.Add(rollWeight)
         lst.Add(rollDiameter)
         Try
@@ -130,17 +134,17 @@ Public Class MainForm
         End Try
 
         If success Then
-            writeDatatoOracle(rollATFID.ValueAsString, rollWidth.ValueAsString, rollWeight.ValueAsString, rollDiameter.ValueAsString, rollLength.ValueAsString)
+            writeDatatoOracle(rollATFID.ValueAsString, rollWidth.ValueAsString, rollWeight.ValueAsString, rollDiameter.ValueAsString)
         End If
         'TODO get the values from the PLC and store them in local variables also set a value that you had read the values 
         'at the end call the write to DB function
     End Sub
 
-    Private Sub writeDatatoOracle(ByVal rollATFID As String, ByVal rollWidth As Integer, ByVal rollWeight As Double, ByVal rollDiameter As Integer, ByVal rollLength As Integer)
+    Private Sub writeDatatoOracle(ByVal rollATFID As String, ByVal rollWidth As Integer, ByVal rollWeight As Double, ByVal rollDiameter As Integer)
         'TODO  connect to Oracle and send the query to database
         'then commit the changes
         'after that start the sequence for applying the label
-        Dim conResult = DBFunctions.insertToDB(rollATFID, rollWidth, rollWeight, rollDiameter, rollLength)
+        Dim conResult = DBFunctions.insertToDB(rollATFID, rollWidth, rollWeight, rollDiameter)
         If conResult = 2 Then
             MsgBox("Problem inserting data to Database")
             writetoLog("Problem inserting data to Database")
@@ -262,6 +266,16 @@ Public Class MainForm
             'Also exit this evaluation procedure
             If printerStatus > 0 And printerStatus < 5 Then
                 SendSerialData("|01RE" + Chr(13))
+                'in case of failure during going down or not finding a roll inform PLC
+                If printerStatus = 2 Or printerStatus = 4 Then
+                    Dim val1 As New Communication.PLCTag("DB98.DBW22")
+                    val1.Controlvalue = 1
+                    Try
+                        myConn.WriteValue(val1)
+                    Catch ex As Exception
+
+                    End Try
+                End If
                 Exit Sub
             End If
 
@@ -384,8 +398,9 @@ Public Class MainForm
         If applyLabelRequest And applyLabelStatus = 5 And timer1sec Then
             'if we need to trigger something this is the trigger
             LabelStatusTxt.Text = "Ended cycle"
-            Dim val1 As New Communication.PLCTag("DB98.DBW0")
-            val1.Controlvalue = 0
+            'write succesfull end of cycle
+            Dim val1 As New Communication.PLCTag("DB98.DBW20")
+            val1.Controlvalue = 1
             Try
                 myConn.WriteValue(val1)
             Catch ex As Exception
@@ -437,7 +452,7 @@ Public Class MainForm
     End Function
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-        Dim conResult = DBFunctions.insertToDB("TEST", 100.1, 100.2, 100.4, 2)
+        Dim conResult = DBFunctions.insertToDB(1111, 100.1, 100.2, 100.4)
         'evaluate result
         Select Case conResult
             Case 0
@@ -474,5 +489,44 @@ Public Class MainForm
 
             initiatePrintSeq()
         End If
+    End Sub
+
+    Private Sub PalletUpdate_Tick(sender As Object, e As EventArgs) Handles PalletUpdate.Tick
+        Dim paletReadyTag As New Communication.PLCTag("DB98.DBW10")
+        paletReadyTag.TagDataType = TagDataType.Int
+        If myConn.Connected Then
+            myConn.ReadValue(paletReadyTag)
+            If palletisbeingread Then
+                Exit Sub
+            End If
+            If paletReadyTag.Value = 1 Then
+                palletisbeingread = True
+                readPallet()
+            Else
+                'exit sub
+            End If
+
+        Else
+            PLCUpdate.Enabled = False
+        End If
+
+    End Sub
+
+    Private Sub readPallet()
+
+        'TODO
+        'Write code to handle reading of pallet data
+
+        'when finished reading pallet data re-enable the reading function and infrom PLC
+        palletisbeingread = False
+
+        Dim val1 As New Communication.PLCTag("DB98.DBW30")
+        val1.Controlvalue = 1
+        Try
+            myConn.WriteValue(val1)
+        Catch ex As Exception
+
+        End Try
+
     End Sub
 End Class

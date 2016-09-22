@@ -13,7 +13,7 @@
         Me.Close()
     End Sub
 
-    Private Sub DBSettings_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Public Sub DBSettings_Load(sender As Object, e As EventArgs) Handles Me.Load
         hostTxt.Text = My.Settings.host
         portTxt.Text = My.Settings.port
         serviceNameTxt.Text = My.Settings.serviceName

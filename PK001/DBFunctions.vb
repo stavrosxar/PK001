@@ -27,24 +27,23 @@
         Return 0
     End Function
 
-    Public Function insertToDB(ByRef rollATFID As String, ByVal rollWidth As Double, ByVal rollWeight As Double, ByVal rollDiameter As Double, ByVal rollLength As Double) As Integer
+    Public Function insertToDB(ByVal rollATFID As String, ByVal rollWidth As Double, ByVal rollWeight As Double, ByVal rollDiameter As Double) As Integer
         Dim result As Integer
         'write code for inserting data to DB 
         'first test connectivity 
         'testfor commit
         Dim strSql As String
         Dim id As Double
-        id = getMaxID()
+        id = getMaxID() + 1
         strSql = "INSERT INTO PR_FYLWS_ATF_ROLLS " _
-                 & "( ID, ATF_DTINS, ATF_ROLLID, ATF_ROLL_ACTUAL_WEIGHT, ATF_ROLL_ACTUAL_DIAM, ATF_ROLL_ACTUAL_WIDTH, ATF_ROLL_ACTUAL_LENGTH, ATF_ID)" _
-                 & "VALUES ( '" & id & "', " _
+                 & "( ID, ATF_DTINS, ATF_ROLLID, ATF_ROLL_ACTUAL_WEIGHT, ATF_ROLL_ACTUAL_DIAM, ATF_ROLL_ACTUAL_WIDTH, ATF_ROLL_ACTUAL_LENGTH, ATF_ID, FLG_CURSTATE)" _
+                 & "VALUES ( " & id & ", " _
                  & " SYSDATE, " _
-                 & "' " & rollATFID & "', " _
-                 & "' " & rollWeight & "', " _
-                 & "' " & rollDiameter & "', " _
-                 & "' " & rollWidth & "', " _
-                 & "' " & rollLength & "', " _
-                 & "'ATF01')"
+                 & id & ", " _
+                 & rollWeight & ", " _
+                 & rollDiameter & ", " _
+                 & rollWidth & ", " _
+                 & "'ATF01' , 0)"
         Dim Rs = CreateObject("ADODB.Recordset")
         If DBconnected Then
             'insert to DB
@@ -55,8 +54,8 @@
                 'DBconnected = False
                 result = 1
             Catch e As Exception
-                MsgBox(e.ToString)
-                MainForm.writetoLog(e.ToString)
+                MsgBox(strSql)
+                MainForm.writetoLog(strSql) 'e.ToString & " " & 
                 result = 2
             End Try
 
@@ -69,7 +68,7 @@
             If conRes = 0 Then 'if failure to connect
                 result = 0
             Else
-                insertToDB(rollATFID, rollWidth, rollWeight, rollDiameter, rollLength)
+                insertToDB(rollATFID, rollWidth, rollWeight, rollDiameter)
             End If
         End If
         Return result
@@ -104,7 +103,7 @@
         Dim result As Double
         Dim strSql As String
 
-        strSql = "select nvl(max(id),0)+1 from PR_FYLWS_ATF_ROLLS"
+        strSql = "select nvl(max(id),0) from PR_FYLWS_ATF_ROLLS"
 
         Dim Rs = CreateObject("ADODB.Recordset")
         If DBconnected Then

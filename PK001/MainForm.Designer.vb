@@ -50,6 +50,7 @@ Partial Class MainForm
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.PalletUpdate = New System.Windows.Forms.Timer(Me.components)
         Me.MenuStrip1.SuspendLayout()
         CType(Me.EventLog, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -200,7 +201,7 @@ Partial Class MainForm
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(196, 37)
         Me.Button3.TabIndex = 8
-        Me.Button3.Text = "Test DB write"
+        Me.Button3.Text = "Test DB write query"
         Me.Button3.UseVisualStyleBackColor = True
         '
         'LabelStatusTxt
@@ -237,6 +238,9 @@ Partial Class MainForm
         '
         Me.Timer1.Enabled = True
         Me.Timer1.Interval = 2000
+        '
+        'PalletUpdate
+        '
         '
         'MainForm
         '
@@ -292,5 +296,6 @@ Partial Class MainForm
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Timer1 As System.Windows.Forms.Timer
+    Friend WithEvents PalletUpdate As System.Windows.Forms.Timer
 
 End Class
