@@ -23,6 +23,9 @@ Public Class MainForm
     Dim CommandSend As Boolean
     Dim rollUnderPrinter As Boolean
     Dim palletisbeingread As Boolean
+    Dim CurrentRollID As Integer
+    Dim CurrentATFPalletID As Integer
+    Public CurrentPalletID As Integer
 
 
     Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
@@ -128,6 +131,7 @@ Public Class MainForm
         Try
             myConn.ReadValues(lst)
             success = True
+            CurrentRollID = rollATFID.ValueAsString
         Catch ex As Exception
             EventLog.WriteEntry("Cannot retrieve values from PLC Msg= " + ex.ToString)
             success = False
@@ -136,8 +140,7 @@ Public Class MainForm
         If success Then
             writeDatatoOracle(rollATFID.ValueAsString, rollWidth.ValueAsString, rollWeight.ValueAsString, rollDiameter.ValueAsString)
         End If
-        'TODO get the values from the PLC and store them in local variables also set a value that you had read the values 
-        'at the end call the write to DB function
+      
     End Sub
 
     Private Sub writeDatatoOracle(ByVal rollATFID As String, ByVal rollWidth As Integer, ByVal rollWeight As Double, ByVal rollDiameter As Integer)
@@ -157,6 +160,19 @@ Public Class MainForm
         applyLabelRequest = True
         CommandSend = False
         initiatePrintSeq()
+    End Sub
+
+    Private Sub writeEventToOracle(ByVal rollATFID As String, ByVal EventType As Integer)
+        Dim conResult = DBFunctions.insertEventToDB(rollATFID, EventType)
+        If conResult = 2 Then
+            'MsgBox("Problem inserting data to Database")
+            writetoLog("Problem writing event to Database")
+            Exit Sub
+        End If
+        If conResult = 0 Then
+            writetoLog("Problem connecting to Database")
+            Exit Sub
+        End If
     End Sub
 
     Private Sub dataReceived(sender As Object, e As IO.Ports.SerialDataReceivedEventArgs) Handles SerialPort.DataReceived
@@ -268,10 +284,14 @@ Public Class MainForm
                 SendSerialData("|01RE" + Chr(13))
                 'in case of failure during going down or not finding a roll inform PLC
                 If printerStatus = 2 Or printerStatus = 4 Then
-                    Dim val1 As New Communication.PLCTag("DB98.DBW22")
-                    val1.Controlvalue = 1
+                    Dim val1 As New Communication.PLCTag("DB98.DBW20")
+                    Dim val2 As New Communication.PLCTag("DB98.DBW22") 'error in printing tag
+                    val1.Controlvalue = 0
+                    val2.Controlvalue = 1
+                    writeEventToOracle(CurrentRollID, 2)
                     Try
                         myConn.WriteValue(val1)
+                        myConn.WriteValue(val2)
                     Catch ex As Exception
 
                     End Try
@@ -400,9 +420,13 @@ Public Class MainForm
             LabelStatusTxt.Text = "Ended cycle"
             'write succesfull end of cycle
             Dim val1 As New Communication.PLCTag("DB98.DBW20")
+            Dim val2 As New Communication.PLCTag("DB98.DBW22")
             val1.Controlvalue = 1
+            val2.Controlvalue = 0
+            writeEventToOracle(CurrentRollID, 1)
             Try
                 myConn.WriteValue(val1)
+                myConn.WriteValue(val2)
             Catch ex As Exception
 
             End Try
@@ -516,17 +540,120 @@ Public Class MainForm
 
         'TODO
         'Write code to handle reading of pallet data
+        Dim success As Boolean
+        Dim successRoll As Boolean
+        Dim numberOfRollsOnPallet As Integer
+        Dim lst As New List(Of PLCTag)
 
-        'when finished reading pallet data re-enable the reading function and infrom PLC
-        palletisbeingread = False
+        Dim palletCode As New Communication.PLCTag("DB910.DBB0")
+        palletCode.TagDataType = TagDataType.CharArray
+        palletCode.ArraySize = 20
+        Dim palletNumber As New Communication.PLCTag("DB910.DBW22")
+        palletNumber.TagDataType = TagDataType.Int
+        Dim palletHeight As New Communication.PLCTag("DB910.DBW24")
+        palletHeight.TagDataType = TagDataType.Int
+        Dim palletWidth As New Communication.PLCTag("DB910.DBW26")
+        palletWidth.TagDataType = TagDataType.Int
+        Dim palletDepth As New Communication.PLCTag("DB910.DBW28")
+        palletDepth.TagDataType = TagDataType.Int
+        Dim palletWeight As New Communication.PLCTag("DB910.DBW30")
+        palletWeight.TagDataType = TagDataType.Int
+        Dim palletRollsWeight As New Communication.PLCTag("DB910.DBW32")
+        palletRollsWeight.TagDataType = TagDataType.Int
+        Dim palletRollsNumber As New Communication.PLCTag("DB910.DBW34")
+        palletRollsNumber.TagDataType = TagDataType.Int
+        Dim palletID As New Communication.PLCTag("DB910.DBW48")
+        palletID.TagDataType = TagDataType.Int
 
-        Dim val1 As New Communication.PLCTag("DB98.DBW30")
-        val1.Controlvalue = 1
+
+        
+        lst.Add(palletCode)
+        lst.Add(palletNumber)
+        lst.Add(palletHeight)
+        lst.Add(palletWidth)
+        lst.Add(palletDepth)
+        lst.Add(palletWeight)
+        lst.Add(palletRollsWeight)
+        lst.Add(palletRollsNumber)
+        lst.Add(palletID)
+
         Try
-            myConn.WriteValue(val1)
+            myConn.ReadValues(lst)
+            success = True
+            CurrentATFPalletID = palletID.Value
+            numberOfRollsOnPallet = palletRollsNumber.Value
+            writePalletToOracle("ATF01", palletID.Value, palletHeight.Value, palletWidth.Value, palletDepth.Value, palletWeight.Value, palletRollsNumber.Value, palletRollsWeight.Value)
         Catch ex As Exception
-
+            EventLog.WriteEntry("Cannot retrieve values from PLC Msg= " + ex.ToString)
+            success = False
         End Try
+
+        If success Then
+            'Code for reading all rolls on pallet
+            'Loop for to number of occupied positions
+            Dim lstRolls As New List(Of PLCTag)
+            Dim startAddress As Integer = 50 'Starting  Adress
+            Dim offsetPerRoll As Integer = 54 'Offset per Roll for looping in memory areas
+            For i As Integer = 0 To numberOfRollsOnPallet - 1 Step 1
+                Dim rollNumber As New Communication.PLCTag("DB910.DBW" & (startAddress + 22) + (offsetPerRoll * i))
+                rollNumber.TagDataType = TagDataType.Int
+                Dim rollWeight As New Communication.PLCTag("DB910.DBD" & (startAddress + 24) + (offsetPerRoll * i))
+                rollWeight.TagDataType = TagDataType.Float
+                Dim rollWidth As New Communication.PLCTag("DB910.DBW" & (startAddress + 28) + (offsetPerRoll * i))
+                rollWidth.TagDataType = TagDataType.Int
+                Dim rollDiameter As New Communication.PLCTag("DB910.DBW" & (startAddress + 36) + (offsetPerRoll * i))
+                rollDiameter.TagDataType = TagDataType.Int
+                Dim rollID As New Communication.PLCTag("DB910.DBW" & (startAddress + 46) + (offsetPerRoll * i))
+                rollID.TagDataType = TagDataType.Int
+                Dim rollPalletNumber As New Communication.PLCTag("DB910.DBW" & (startAddress + 48) + (offsetPerRoll * i))
+                rollPalletNumber.TagDataType = TagDataType.Int
+                Dim rollLabel As New Communication.PLCTag("DB910.DBW" & (startAddress + 50) + (offsetPerRoll * i))
+                rollLabel.TagDataType = TagDataType.Int
+
+                lstRolls.Add(rollNumber)
+                lstRolls.Add(rollWeight)
+                lstRolls.Add(rollWidth)
+                lstRolls.Add(rollDiameter)
+                lstRolls.Add(rollID)
+                lstRolls.Add(rollPalletNumber)
+                lstRolls.Add(rollLabel)
+
+                Try
+                    myConn.ReadValues(lstRolls)
+                    successRoll = True
+                Catch ex As Exception
+                    EventLog.WriteEntry("Cannot retrieve values from PLC Msg= " + ex.ToString)
+                    successRoll = False
+                End Try
+
+                If successRoll Then
+                    writePalletRollToOracle(CurrentPalletID, "ATF01", CurrentATFPalletID, i, rollNumber.Value, rollWeight.Value, rollID.Value, rollLabel.Value)
+                End If
+
+
+
+            Next
+
+            'when finished reading pallet data re-enable the reading function and infrom PLC
+            palletisbeingread = False
+
+            'finished reading pallet. Inform PLC
+            Dim val1 As New Communication.PLCTag("DB98.DBW30")
+            val1.Controlvalue = 1
+            Try
+                myConn.WriteValue(val1)
+            Catch ex As Exception
+
+            End Try
+        End If
+
+    End Sub
+
+    Private Sub writePalletToOracle(ByVal ATFID As String, ByVal ATFPalletID As Integer, ByVal PalletHeight As Integer, ByVal PalletWidth As Integer, ByVal PalletDepth As Integer, ByVal PalletWeight As Integer, ByVal PalletRollsNo As Integer, ByVal PalletRollsWeight As Integer)
+
+    End Sub
+
+    Private Sub writePalletRollToOracle(ByVal palletOracleID As Integer, ByVal ATFID As String, ByVal ATFPalletID As Integer, ByVal rollAdressNo As Integer, ByVal rollNo As Integer, ByVal rollWeight As Integer, ByVal rollID As Integer, ByVal rollLabel As Integer)
 
     End Sub
 End Class
