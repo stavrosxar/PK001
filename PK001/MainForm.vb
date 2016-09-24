@@ -650,10 +650,28 @@ Public Class MainForm
     End Sub
 
     Private Sub writePalletToOracle(ByVal ATFID As String, ByVal ATFPalletID As Integer, ByVal PalletHeight As Integer, ByVal PalletWidth As Integer, ByVal PalletDepth As Integer, ByVal PalletWeight As Integer, ByVal PalletRollsNo As Integer, ByVal PalletRollsWeight As Integer)
-
+        Dim conResult = DBFunctions.writePalletToDB(ATFPalletID, PalletHeight, PalletWidth, PalletDepth, PalletWeight, PalletRollsNo, PalletRollsWeight)
+        If conResult = 2 Then
+            'MsgBox("Problem inserting data to Database")
+            writetoLog("Problem writing event to Database")
+            Exit Sub
+        End If
+        If conResult = 0 Then
+            writetoLog("Problem connecting to Database")
+            Exit Sub
+        End If
     End Sub
 
     Private Sub writePalletRollToOracle(ByVal palletOracleID As Integer, ByVal ATFID As String, ByVal ATFPalletID As Integer, ByVal rollAdressNo As Integer, ByVal rollNo As Integer, ByVal rollWeight As Integer, ByVal rollID As Integer, ByVal rollLabel As Integer)
-
+        Dim conResult = DBFunctions.writePalletRollToDB(palletOracleID, ATFPalletID, rollAdressNo, rollNo, rollWeight, rollID, rollLabel)
+        If conResult = 2 Then
+            'MsgBox("Problem inserting data to Database")
+            writetoLog("Problem writing event to Database")
+            Exit Sub
+        End If
+        If conResult = 0 Then
+            writetoLog("Problem connecting to Database")
+            Exit Sub
+        End If
     End Sub
 End Class

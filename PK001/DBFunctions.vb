@@ -170,7 +170,7 @@
             If conRes = 0 Then 'if failure to connect
                 result = 0
             Else
-                insertToDB(rollATFID, rollWidth, rollWeight, rollDiameter)
+                insertEventToDB(rollATFID, EventType)
             End If
         End If
         Return result
@@ -204,7 +204,131 @@
             If conRes = 0 Then 'if failure to connect
                 result = 0
             Else
-                getMaxID()
+                getEventMaxID()
+            End If
+
+        End If
+
+
+        Return result
+    End Function
+
+    Public Function writePalletToDB(ByVal ATFPalletID As Integer, ByVal palletHeight As Integer, ByVal palletWidth As Integer, ByVal palletDepth As Integer, ByVal palletWeight As Integer, ByVal palletRollsNo As Integer, ByVal palletRollsWeight As Integer) As Integer
+        Dim result As Integer
+        Dim strSql As String
+        Dim id As Double
+        id = getPalletMaxID() + 1
+        MainForm.CurrentPalletID = id
+        strSql = "INSERT INTO pr_FYLWS_ATF_PltHdr " _
+                 & "( pltID, ATF_ID, plt_ATFID, ATF_plt_height_mm, ATF_plt_Width_mm, ATF_plt_Depth_mm, ATF_plt_Weight_kg, ATF_plt_Rolls_no, ATF_plt_Rolls_weight, DTINS)" _
+                 & "VALUES ( " & id & ", " _
+                 & "ATF01," _
+                 & ATFPalletID & "," _
+                 & palletHeight & "," _
+                 & palletWidth & "," _
+                 & palletDepth & "," _
+                 & palletWeight & "," _
+                 & palletRollsNo & "," _
+                 & palletRollsWeight & "," _
+                 & " SYSDATE)"
+        Dim Rs = CreateObject("ADODB.Recordset")
+        If DBconnected Then
+            'insert to DB
+            Try
+                Rs.Open(strSql, oConPrivate)
+                result = 1
+            Catch e As Exception
+                MsgBox(strSql)
+                MainForm.writetoLog(strSql) 'e.ToString & " " & 
+                result = 2
+            End Try
+
+            'if success then result = 1
+            'if failure to insert then result = 2
+        Else
+            'if not connected try to connect and attempt one more time to insert the values
+            Dim conRes = connectToDB()
+
+            If conRes = 0 Then 'if failure to connect
+                result = 0
+            Else
+                writePalletToDB(ATFPalletID, palletHeight, palletWidth, palletDepth, palletRollsWeight, palletRollsNo, palletRollsWeight)
+            End If
+        End If
+        Return result
+    End Function
+
+    Public Function writePalletRollToDB(ByVal pltID As Integer, ByVal ATFpalletID As Integer, ByVal ATF_pltroll_AddressNo As Integer, ByVal ATF_pltroll_Number As Integer, ByVal ATF_pltroll_weight As Integer, ByVal ATF_pltrollID As Integer, ByVal ATF_pltroll_No_label As Integer) As Integer
+        Dim result As Integer
+        Dim strSql As String
+        strSql = "INSERT INTO pr_FYLWS_ATF_PltRoll " _
+                 & "( pltID, ATF_ID, ATF_pltID, ATF_pltroll_AddressNo, ATF_pltroll_Number, ATF_pltroll_weight, ATF_pltrollID, ATF_pltroll_No_label, DTINS)" _
+                 & "VALUES ( " & pltID & ", " _
+                 & "ATF01," _
+                 & ATFpalletID & "," _
+                 & ATF_pltroll_AddressNo & "," _
+                 & ATF_pltroll_Number & "," _
+                 & ATF_pltroll_weight & "," _
+                 & ATF_pltrollID & "," _
+                 & ATF_pltroll_No_label & "," _
+                 & " SYSDATE)"
+        Dim Rs = CreateObject("ADODB.Recordset")
+        If DBconnected Then
+            'insert to DB
+            Try
+                Rs.Open(strSql, oConPrivate)
+                result = 1
+            Catch e As Exception
+                MsgBox(strSql)
+                MainForm.writetoLog(strSql) 'e.ToString & " " & 
+                result = 2
+            End Try
+
+            'if success then result = 1
+            'if failure to insert then result = 2
+        Else
+            'if not connected try to connect and attempt one more time to insert the values
+            Dim conRes = connectToDB()
+
+            If conRes = 0 Then 'if failure to connect
+                result = 0
+            Else
+                writePalletRollToDB(pltID, ATFpalletID, ATF_pltroll_AddressNo, ATF_pltroll_Number, ATF_pltroll_weight, ATF_pltrollID, ATF_pltroll_No_label)
+            End If
+        End If
+        Return result
+    End Function
+
+    Private Function getPalletMaxID() As Double
+        Dim result As Double
+        Dim strSql As String
+
+        strSql = "select nvl(max(EVENTID),0) from pr_FYLWS_ATF_PltHdr"
+
+        Dim Rs = CreateObject("ADODB.Recordset")
+        If DBconnected Then
+            'insert to DB
+
+            'Try
+            Rs.Open(strSql, oConPrivate)
+            'oConPrivate.close()
+            'DBconnected = False
+
+            result = Rs.Fields(0).Value
+            '   Catch e As Exception
+            '      MainForm.writetoLog(e.ToString)
+            '     result = 2
+            'End Try
+
+            'if success then result = 1
+            'if failure to insert then result = 2
+        Else
+            Dim conRes = connectToDB()
+
+            If conRes = 0 Then 'if failure to connect
+                result = 0
+            Else
+                getPalletMaxID()
             End If
 
         End If
