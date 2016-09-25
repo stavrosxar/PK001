@@ -27,32 +27,36 @@
         Return 0
     End Function
 
-    Public Function insertToDB(ByVal rollATFID As String, ByVal rollWidth As Double, ByVal rollWeight As Double, ByVal rollDiameter As Double) As Integer
+    Public Function insertToDB(ByVal rollATFID As Integer, ByVal rollWidth As Integer, ByVal rollWeight As Integer, ByVal rollDiameter As Integer) As Integer
         Dim result As Integer
         Dim strSql As String
         Dim id As Double
         id = getMaxID() + 1
         strSql = "INSERT INTO PR_FYLWS_ATF_ROLLS " _
-                 & "( ID, ATF_DTINS, ATF_ROLLID, ATF_ROLL_ACTUAL_WEIGHT, ATF_ROLL_ACTUAL_DIAM, ATF_ROLL_ACTUAL_WIDTH, ATF_ROLL_ACTUAL_LENGTH, ATF_ID, FLG_CURSTATE)" _
+                 & "( ID,ATF_ID, ATF_ROLLID, ATF_roll_actual_widthmm, ATF_roll_actual_weight, ATF_roll_actual_diammm, ATF_dtIns, Flg_curState, Flg_manual_entry)" _
                  & "VALUES ( " & id & ", " _
-                 & " SYSDATE, " _
-                 & id & ", " _
+                 & "'ATF01'" & ", " _
+                 & rollATFID & ", " _
+                 & rollWidth & ", " _
                  & rollWeight & ", " _
                  & rollDiameter & ", " _
-                 & rollWidth & ", " _
-                 & "'ATF01' , 0)"
+                 & " SYSDATE, " _
+                 & "0 , 0)"
         Dim Rs = CreateObject("ADODB.Recordset")
         If DBconnected Then
             'insert to DB
 
             Try
+                LogForm.log1(strSql)
                 Rs.Open(strSql, oConPrivate)
                 'oConPrivate.close()
                 'DBconnected = False
+
                 result = 1
             Catch e As Exception
-                MsgBox(strSql)
-                MainForm.writetoLog(strSql) 'e.ToString & " " & 
+                'MsgBox(strSql) 
+                LogForm.log1("Error in SQL")
+                MsgBox(e.ToString)
                 result = 2
             End Try
 
@@ -156,7 +160,7 @@
                 'DBconnected = False
                 result = 1
             Catch e As Exception
-                MsgBox(strSql)
+                'MsgBox(strSql)
                 MainForm.writetoLog(strSql) 'e.ToString & " " & 
                 result = 2
             End Try
@@ -238,7 +242,7 @@
                 Rs.Open(strSql, oConPrivate)
                 result = 1
             Catch e As Exception
-                MsgBox(strSql)
+                'MsgBox(strSql)
                 MainForm.writetoLog(strSql) 'e.ToString & " " & 
                 result = 2
             End Try
@@ -279,7 +283,7 @@
                 Rs.Open(strSql, oConPrivate)
                 result = 1
             Catch e As Exception
-                MsgBox(strSql)
+                'MsgBox(strSql)
                 MainForm.writetoLog(strSql) 'e.ToString & " " & 
                 result = 2
             End Try

@@ -89,6 +89,12 @@
     <Compile Include="DBSettings.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="LogForm.Designer.vb">
+      <DependentUpon>LogForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="LogForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="MainForm.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -124,6 +130,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DBSettings.resx">
       <DependentUpon>DBSettings.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LogForm.resx">
+      <DependentUpon>LogForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.vb</DependentUpon>

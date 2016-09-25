@@ -31,6 +31,7 @@ Partial Class MainForm
         Me.SerialCOMSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PLCConnectionSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OracleDBConnectionSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ShowLogToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SerialPort = New System.IO.Ports.SerialPort(Me.components)
         Me.StatusStrip = New System.Windows.Forms.StatusStrip()
@@ -51,6 +52,7 @@ Partial Class MainForm
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.PalletUpdate = New System.Windows.Forms.Timer(Me.components)
+        Me.Button4 = New System.Windows.Forms.Button()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.EventLog, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -79,7 +81,7 @@ Partial Class MainForm
         '
         'SettingsToolStripMenuItem
         '
-        Me.SettingsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SerialCOMSettingsToolStripMenuItem, Me.PLCConnectionSettingsToolStripMenuItem, Me.OracleDBConnectionSettingsToolStripMenuItem})
+        Me.SettingsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SerialCOMSettingsToolStripMenuItem, Me.PLCConnectionSettingsToolStripMenuItem, Me.OracleDBConnectionSettingsToolStripMenuItem, Me.ShowLogToolStripMenuItem})
         Me.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem"
         Me.SettingsToolStripMenuItem.Size = New System.Drawing.Size(61, 20)
         Me.SettingsToolStripMenuItem.Text = "Settings"
@@ -101,6 +103,12 @@ Partial Class MainForm
         Me.OracleDBConnectionSettingsToolStripMenuItem.Name = "OracleDBConnectionSettingsToolStripMenuItem"
         Me.OracleDBConnectionSettingsToolStripMenuItem.Size = New System.Drawing.Size(245, 22)
         Me.OracleDBConnectionSettingsToolStripMenuItem.Text = "Oracle DB Connection Settings..."
+        '
+        'ShowLogToolStripMenuItem
+        '
+        Me.ShowLogToolStripMenuItem.Name = "ShowLogToolStripMenuItem"
+        Me.ShowLogToolStripMenuItem.Size = New System.Drawing.Size(245, 22)
+        Me.ShowLogToolStripMenuItem.Text = "Show Log"
         '
         'AboutToolStripMenuItem
         '
@@ -143,6 +151,7 @@ Partial Class MainForm
         '
         'PLCUpdate
         '
+        Me.PLCUpdate.Interval = 1000
         '
         'Button1
         '
@@ -242,11 +251,21 @@ Partial Class MainForm
         'PalletUpdate
         '
         '
+        'Button4
+        '
+        Me.Button4.Location = New System.Drawing.Point(33, 226)
+        Me.Button4.Name = "Button4"
+        Me.Button4.Size = New System.Drawing.Size(251, 40)
+        Me.Button4.TabIndex = 12
+        Me.Button4.Text = "Reset Result"
+        Me.Button4.UseVisualStyleBackColor = True
+        '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(573, 377)
+        Me.Controls.Add(Me.Button4)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.LabelStatusTxt)
@@ -297,5 +316,7 @@ Partial Class MainForm
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Timer1 As System.Windows.Forms.Timer
     Friend WithEvents PalletUpdate As System.Windows.Forms.Timer
+    Friend WithEvents ShowLogToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents Button4 As System.Windows.Forms.Button
 
 End Class

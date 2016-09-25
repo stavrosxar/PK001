@@ -63,6 +63,7 @@ Public Class MainForm
             Try
                 myConn.Connect()
                 PLCUpdate.Enabled = True
+                LogForm.log1("Enable PLC Update")
                 PLCConn.Text = "Stop PLC Communication"
             Catch ex As Exception
                 MsgBox("No connection could be made. Please check your settings")
@@ -92,14 +93,17 @@ Public Class MainForm
         printReadyTag.DataTypeStringFormat = TagDisplayDataType.Decimal
                If myConn.Connected Then
             myConn.ReadValue(printReadyTag)
+
             If rollUnderPrinter Then
                 Exit Sub
             End If
-            If printReadyTag.DataTypeStringFormat = 1 Then
+            If printReadyTag.Value = 1 Then
                 rollUnderPrinter = True
+                LogForm.log1("New Roll Detected")
+                LogForm.log1("Roll Under Printer = " & printReadyTag.Value)
                 getValuesFromPLC()
             Else
-                'exit sub
+                'rollUnderPrinter = False
             End If
 
         Else
@@ -132,13 +136,17 @@ Public Class MainForm
             myConn.ReadValues(lst)
             success = True
             CurrentRollID = rollATFID.ValueAsString
+            LogForm.log1("ATFID = " & rollATFID.Value)
+            LogForm.log1("Width = " & rollWidth.Value)
+            LogForm.log1("Weight = " & rollWeight.Value)
+            LogForm.log1("Diameter = " & rollDiameter.Value)
         Catch ex As Exception
             EventLog.WriteEntry("Cannot retrieve values from PLC Msg= " + ex.ToString)
             success = False
         End Try
 
         If success Then
-            writeDatatoOracle(rollATFID.ValueAsString, rollWidth.ValueAsString, rollWeight.ValueAsString, rollDiameter.ValueAsString)
+            writeDatatoOracle(rollATFID.ValueAsString, rollWidth.Value, rollWeight.Value, rollDiameter.Value)
         End If
       
     End Sub
@@ -151,26 +159,38 @@ Public Class MainForm
         If conResult = 2 Then
             MsgBox("Problem inserting data to Database")
             writetoLog("Problem inserting data to Database")
+            '---test
+            rollUnderPrinter = False
+            WriteResultToPLC(0, 1, 2)
+            LogForm.log1("Error In DB")
+            LogForm.log1("Waiting for new roll")
             Exit Sub
         End If
         If conResult = 0 Then
             MsgBox("Problem connecting to Database")
+            '--test
+            rollUnderPrinter = False
+            WriteResultToPLC(0, 1, 2)
+            LogForm.log1("Error In DB")
+            LogForm.log1("Waiting for new roll")
             Exit Sub
         End If
+        LogForm.log1("Write to DB completed")
         applyLabelRequest = True
         CommandSend = False
-        initiatePrintSeq()
+      
+        'initiatePrintSeq()
     End Sub
 
     Private Sub writeEventToOracle(ByVal rollATFID As String, ByVal EventType As Integer)
         Dim conResult = DBFunctions.insertEventToDB(rollATFID, EventType)
         If conResult = 2 Then
             'MsgBox("Problem inserting data to Database")
-            writetoLog("Problem writing event to Database")
+            LogForm.log1("Problem writing event to Database")
             Exit Sub
         End If
         If conResult = 0 Then
-            writetoLog("Problem connecting to Database")
+            LogForm.log1("Problem connecting to Database")
             Exit Sub
         End If
     End Sub
@@ -204,7 +224,6 @@ Public Class MainForm
                 EventLog.WriteEntry("Cannot write to Serial Port. Msg =" + ex.ToString)
                 MsgBox("Cannot write to Serial Port. Msg =" + ex.ToString)
                 SerialPort.Close()
-
             End Try
         Else
             Try
@@ -471,12 +490,12 @@ Public Class MainForm
 
 
     Public Function writetoLog(ByVal str As String)
-        EventLog.WriteEntry(str)
+        ' EventLog.WriteEntry(str)
         Return 0
     End Function
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-        Dim conResult = DBFunctions.insertToDB(1111, 100.1, 100.2, 100.4)
+        Dim conResult = DBFunctions.insertToDB(1111, 100, 100, 100)
         'evaluate result
         Select Case conResult
             Case 0
@@ -673,5 +692,30 @@ Public Class MainForm
             writetoLog("Problem connecting to Database")
             Exit Sub
         End If
+    End Sub
+
+    Private Sub ShowLogToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ShowLogToolStripMenuItem.Click
+        LogForm.Show()
+    End Sub
+
+    Private Sub WriteResultToPLC(ByVal LabelOK As Integer, ByRef LabelNotOK As Integer, ByVal EventID As Integer)
+        Dim val1 As New Communication.PLCTag("DB98.DBW20")
+        Dim val2 As New Communication.PLCTag("DB98.DBW22")
+        val1.Controlvalue = LabelOK
+        val2.Controlvalue = LabelNotOK
+        If LabelNotOK = 1 Or LabelOK = 1 Then
+            writeEventToOracle(CurrentRollID, EventID)
+        End If
+        Try
+            myConn.WriteValue(val1)
+            myConn.WriteValue(val2)
+        Catch ex As Exception
+
+        End Try
+
+    End Sub
+
+    Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+        WriteResultToPLC(0, 0, 1)
     End Sub
 End Class
