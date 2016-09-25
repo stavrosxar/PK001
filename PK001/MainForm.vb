@@ -22,6 +22,7 @@ Public Class MainForm
     Dim timer100sec As Boolean
     Dim timer1sec As Boolean
     Dim CommandSend As Boolean
+    Dim con As DBLibraryClass
 
 
     Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
@@ -37,6 +38,7 @@ Public Class MainForm
         EventLog.BeginInit()
         EventLog.Source = "PK-ATF"
         labelCheckCounter = 0
+        con = New DBLibraryClass(My.Settings.host, My.Settings.port, My.Settings.serviceName, My.Settings.user, My.Settings.password)
 
     End Sub
 
@@ -403,7 +405,16 @@ Public Class MainForm
     End Sub
 
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles oracleTestbtn.Click
-        DBFunctions.testConnectiivty()
+        'DBFunctions.testConnectiivty()
+        Dim result As Integer
+        result = con.testConnection()
+        If result = 1 Then
+            MsgBox("Connectivity OK")
+
+        Else
+            MsgBox("No Connection")
+        End If
+
 
     End Sub
 
@@ -464,4 +475,6 @@ Public Class MainForm
             initiatePrintSeq()
         End If
     End Sub
+
+    
 End Class
