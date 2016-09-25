@@ -79,13 +79,13 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="COMComm.vb" />
     <Compile Include="COMSettings.Designer.vb">
       <DependentUpon>COMSettings.vb</DependentUpon>
     </Compile>
     <Compile Include="COMSettings.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DBFunctions.vb" />
     <Compile Include="MainForm.vb">
       <SubType>Form</SubType>
     </Compile>

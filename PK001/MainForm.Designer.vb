@@ -31,11 +31,11 @@ Partial Class MainForm
         Me.SerialCOMSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PLCConnectionSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OracleDBConnectionSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ManualFunctionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LabelApplicatorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CheckSequenceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CheckDBConnectionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SerialPort = New System.IO.Ports.SerialPort(Me.components)
         Me.StatusStrip = New System.Windows.Forms.StatusStrip()
         Me.EventLog = New System.Diagnostics.EventLog()
@@ -51,6 +51,7 @@ Partial Class MainForm
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.dbCom = New System.Windows.Forms.Button()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.EventLog, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -102,12 +103,6 @@ Partial Class MainForm
         Me.OracleDBConnectionSettingsToolStripMenuItem.Size = New System.Drawing.Size(245, 22)
         Me.OracleDBConnectionSettingsToolStripMenuItem.Text = "Oracle DB Connection Settings..."
         '
-        'AboutToolStripMenuItem
-        '
-        Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
-        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(52, 20)
-        Me.AboutToolStripMenuItem.Text = "About"
-        '
         'ManualFunctionToolStripMenuItem
         '
         Me.ManualFunctionToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.LabelApplicatorToolStripMenuItem, Me.CheckSequenceToolStripMenuItem, Me.CheckDBConnectionToolStripMenuItem})
@@ -132,6 +127,12 @@ Partial Class MainForm
         Me.CheckDBConnectionToolStripMenuItem.Name = "CheckDBConnectionToolStripMenuItem"
         Me.CheckDBConnectionToolStripMenuItem.Size = New System.Drawing.Size(190, 22)
         Me.CheckDBConnectionToolStripMenuItem.Text = "Check DB Connection"
+        '
+        'AboutToolStripMenuItem
+        '
+        Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
+        Me.AboutToolStripMenuItem.Size = New System.Drawing.Size(52, 20)
+        Me.AboutToolStripMenuItem.Text = "About"
         '
         'SerialPort
         '
@@ -234,11 +235,23 @@ Partial Class MainForm
         Me.Timer1.Enabled = True
         Me.Timer1.Interval = 2000
         '
+        'dbCom
+        '
+        Me.dbCom.BackColor = System.Drawing.Color.Silver
+        Me.dbCom.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dbCom.Location = New System.Drawing.Point(311, 57)
+        Me.dbCom.Name = "dbCom"
+        Me.dbCom.Size = New System.Drawing.Size(197, 70)
+        Me.dbCom.TabIndex = 12
+        Me.dbCom.Text = "Start Database Communication"
+        Me.dbCom.UseVisualStyleBackColor = False
+        '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(573, 377)
+        Me.Controls.Add(Me.dbCom)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.LabelStatusTxt)
@@ -286,5 +299,6 @@ Partial Class MainForm
     Friend WithEvents LabelApplicatorToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents CheckSequenceToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents CheckDBConnectionToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents dbCom As System.Windows.Forms.Button
 
 End Class

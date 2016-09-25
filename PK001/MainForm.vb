@@ -82,6 +82,13 @@ Public Class MainForm
             PLCConn.Text = "Start PLC Communication"
             PLCConn.BackColor = Color.Silver
         End If
+        If con.testConnection = 1 Then
+            dbCom.Text = "Disconnect"
+            dbCom.BackColor = Color.Lime
+        Else
+            dbCom.Text = "Start Database Communication"
+            dbCom.BackColor = Color.Silver
+        End If
     End Sub
 
     Private Sub MainForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
@@ -123,32 +130,25 @@ Public Class MainForm
         Catch ex As Exception
             EventLog.WriteEntry("Cannot retrieve values from PLC Msg= " + ex.ToString)
             success = False
+            MsgBox("Check PLC connection")
         End Try
 
         If success Then
-            writeDatatoOracle(rollWidth.Value.ToString, rollWeight.Value.ToString, rollDiameter.Value.ToString)
+            Dim newID As Double = con.getMaxID("table", "ID")
+            Dim sqlStr = "INSERT INTO PR_FYLWS_ATF_ROLLS " _
+                 & "( ID, ATF_DTINS, ATF_ROLL_ACTUAL_WEIGHT, ATF_ROLL_ACTUAL_DIAM, ATF_ROLL_ACTUAL_WIDTH, ATF_ROLL_ACTUAL_LENGTH)" _
+                 & "VALUES ( '" & newID & "', " _
+                 & " SYSDATE, " _
+                 & "' " & rollWeight.Value & "', " _
+                 & "' " & rollDiameter.Value & "', " _
+                 & "' " & rollWidth.Value & "', " & "')"
+            Dim insertResult As Integer = con.insertSQL(sqlStr)
+            If insertResult = 1 Then
+                applyLabelRequest = True
+                CommandSend = False
+                initiatePrintSeq()
+            End If
         End If
-        'TODO get the values from the PLC and store them in local variables also set a value that you had read the values 
-        'at the end call the write to DB function
-    End Sub
-
-    Private Sub writeDatatoOracle(ByVal rollWidth As Integer, ByVal rollWeight As Double, ByVal rollDiameter As Integer)
-        'TODO  connect to Oracle and send the query to database
-        'then commit the changes
-        'after that start the sequence for applying the label
-        Dim conResult = DBFunctions.insertToDB(rollWidth, rollWeight, rollDiameter, 2)
-        If conResult = 2 Then
-            MsgBox("Problem inserting data to Database")
-            writetoLog("Problem inserting data to Database")
-            Exit Sub
-        End If
-        If conResult = 0 Then
-            MsgBox("Problem connecting to Database")
-            Exit Sub
-        End If
-        applyLabelRequest = True
-        CommandSend = False
-        initiatePrintSeq()
     End Sub
 
     Private Sub dataReceived(sender As Object, e As IO.Ports.SerialDataReceivedEventArgs) Handles SerialPort.DataReceived
@@ -329,7 +329,7 @@ Public Class MainForm
 
     End Sub
 
- 
+
 
     Public Sub initiatePrintSeq()
         If applyLabelRequest = False Then
@@ -405,7 +405,7 @@ Public Class MainForm
         End If
     End Sub
 
-   
+
 
     Private Sub OracleDBConnectionSettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OracleDBConnectionSettingsToolStripMenuItem.Click
         'DBSettings.Show()
@@ -421,7 +421,16 @@ Public Class MainForm
     End Function
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-        Dim conResult = DBFunctions.insertToDB(100.1, 100.2, 100.4, 2)
+        Dim newID As Double = con.getMaxID("table", "ID")
+        Dim sqlStr = "INSERT INTO PR_FYLWS_ATF_ROLLS " _
+             & "( ID, ATF_DTINS, ATF_ROLL_ACTUAL_WEIGHT, ATF_ROLL_ACTUAL_DIAM, ATF_ROLL_ACTUAL_WIDTH, ATF_ROLL_ACTUAL_LENGTH)" _
+             & "VALUES ( '" & newID & "', " _
+             & " SYSDATE, " _
+             & "' " & 100 & "', " _
+             & "' " & 101 & "', " _
+             & "' " & 102 & "'" & "')"
+        Dim conResult As Integer = con.insertSQL(sqlStr)
+
         'evaluate result
         Select Case conResult
             Case 0
@@ -489,6 +498,25 @@ Public Class MainForm
 
         Else
             MsgBox("No Connection")
+        End If
+    End Sub
+
+    Private Sub dbCom_Click(sender As Object, e As EventArgs) Handles dbCom.Click
+        If con.testConnection = 1 Then
+            Try
+                con.disConnectDB()
+                dbCom.Text = "Start Database Communication"
+            Catch ex1 As Exception
+                MsgBox("There was a problem disconnecting. Please restart your program to reset connection")
+                'EventLog.WriteEntry("Problem at disconnection." + ex1.Message.ToString)
+            End Try
+        Else
+            Try
+                con.ConnectToDB()
+                dbCom.Text = "Stop Database Communication"
+            Catch ex As Exception
+                MsgBox("No connection could be made. Please check your database settings")
+            End Try
         End If
     End Sub
 End Class
