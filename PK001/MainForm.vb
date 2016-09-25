@@ -5,6 +5,7 @@ Imports DBLibrary
 
 
 Public Class MainForm
+
     Dim myConn As New PLCConnection("ATF PLC Connection")
     Public blowStatus As Boolean
     Public suctionStatus As Boolean
@@ -23,6 +24,7 @@ Public Class MainForm
     Dim timer1sec As Boolean
     Dim CommandSend As Boolean
     Dim con As DBLibraryClass
+    Dim WithEvents dbSettings As DBSettingsForm
 
 
     Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
@@ -39,6 +41,7 @@ Public Class MainForm
         EventLog.Source = "PK-ATF"
         labelCheckCounter = 0
         con = New DBLibraryClass(My.Settings.host, My.Settings.port, My.Settings.serviceName, My.Settings.user, My.Settings.password)
+
 
     End Sub
 
@@ -59,15 +62,15 @@ Public Class MainForm
                 EventLog.WriteEntry("Problem at disconnection." + ex1.Message.ToString)
             End Try
         Else
-                Try
-                    myConn.Connect()
+            Try
+                myConn.Connect()
                 PLCUpdate.Enabled = True
                 PLCConn.Text = "Stop PLC Communication"
-                Catch ex As Exception
+            Catch ex As Exception
                 MsgBox("No connection could be made. Please check your settings")
 
                 EventLog.WriteEntry("Problem at connection to PLC." + ex.Message.ToString)
-                End Try
+            End Try
         End If
     End Sub
 
@@ -326,9 +329,7 @@ Public Class MainForm
 
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        PrinterManual.Show()
-    End Sub
+ 
 
     Public Sub initiatePrintSeq()
         If applyLabelRequest = False Then
@@ -404,29 +405,12 @@ Public Class MainForm
         End If
     End Sub
 
-    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles oracleTestbtn.Click
-        'DBFunctions.testConnectiivty()
-        Dim result As Integer
-        result = con.testConnection()
-        If result = 1 Then
-            MsgBox("Connectivity OK")
-
-        Else
-            MsgBox("No Connection")
-        End If
-
-
-    End Sub
+   
 
     Private Sub OracleDBConnectionSettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OracleDBConnectionSettingsToolStripMenuItem.Click
-        DBSettings.Show()
-    End Sub
-
-    Private Sub Button2_Click_1(sender As Object, e As EventArgs) Handles Button2.Click
-        applyLabelRequest = True
-        CommandSend = False
-        initiatePrintSeq()
-
+        'DBSettings.Show()
+        dbSettings = New DBSettingsForm
+        dbSettings.Show()
 
     End Sub
 
@@ -476,5 +460,35 @@ Public Class MainForm
         End If
     End Sub
 
-    
+    Private Sub SettingsClosed(sender As Object, e As EventArgs) Handles dbSettings.FormClosed
+        Dim settingsList As List(Of String)
+        settingsList = dbSettings.returnSettings()
+        My.Settings.host = settingsList.Item(0)
+        My.Settings.port = settingsList.Item(1)
+        My.Settings.serviceName = settingsList.Item(2)
+        My.Settings.user = settingsList.Item(3)
+        My.Settings.password = settingsList.Item(4)
+    End Sub
+
+
+    Private Sub LabelApplicatorToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LabelApplicatorToolStripMenuItem.Click
+        PrinterManual.Show()
+    End Sub
+
+    Private Sub CheckSequenceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CheckSequenceToolStripMenuItem.Click
+        applyLabelRequest = True
+        CommandSend = False
+        initiatePrintSeq()
+    End Sub
+
+    Private Sub CheckDBConnectionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CheckDBConnectionToolStripMenuItem.Click
+        Dim result As Integer
+        result = con.testConnection()
+        If result = 1 Then
+            MsgBox("Connectivity OK")
+
+        Else
+            MsgBox("No Connection")
+        End If
+    End Sub
 End Class

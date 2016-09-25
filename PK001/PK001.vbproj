@@ -86,12 +86,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="DBFunctions.vb" />
-    <Compile Include="DBSettings.Designer.vb">
-      <DependentUpon>DBSettings.vb</DependentUpon>
-    </Compile>
-    <Compile Include="DBSettings.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="MainForm.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -124,9 +118,6 @@
   <ItemGroup>
     <EmbeddedResource Include="COMSettings.resx">
       <DependentUpon>COMSettings.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DBSettings.resx">
-      <DependentUpon>DBSettings.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.vb</DependentUpon>
