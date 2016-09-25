@@ -1,6 +1,7 @@
 ﻿Imports DotNetSiemensPLCToolBoxLibrary.Communication
 Imports DotNetSiemensPLCToolBoxLibrary.DataTypes
 Imports DotNetSiemensPLCToolBoxLibrary
+Imports DBLibrary
 
 
 Public Class MainForm
@@ -36,6 +37,7 @@ Public Class MainForm
         EventLog.BeginInit()
         EventLog.Source = "PK-ATF"
         labelCheckCounter = 0
+
     End Sub
 
     Private Sub PLCConnectionSettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PLCConnectionSettingsToolStripMenuItem.Click
