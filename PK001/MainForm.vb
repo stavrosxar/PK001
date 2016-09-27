@@ -763,6 +763,26 @@ Public Class MainForm
 
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles dbCom.Click
-
+        If con.testConnection = 1 Then
+            Try
+                con.disConnectDB()
+                dbCom.Text = "Start Database Communication"
+            Catch ex1 As Exception
+                MsgBox("There was a problem disconnecting. Please restart your program to reset connection")
+                'EventLog.WriteEntry("Problem at disconnection." + ex1.Message.ToString)
+            End Try
+        Else
+            Try
+                Dim res As Integer
+                con.ConnectToDB()
+                If res = 1 Then
+                    dbCom.Text = "Stop Database Communication"
+                Else
+                    LogForm.log1("Failed to connect")
+                End If
+            Catch ex As Exception
+                MsgBox("No connection could be made. Please check your database settings")
+            End Try
+        End If
     End Sub
 End Class
