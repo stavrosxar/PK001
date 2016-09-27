@@ -41,6 +41,7 @@ Public Class MainForm
         EventLog.BeginInit()
         EventLog.Source = "PK-ATF"
         labelCheckCounter = 0
+
     End Sub
 
     Private Sub PLCConnectionSettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PLCConnectionSettingsToolStripMenuItem.Click
@@ -716,4 +717,6 @@ Public Class MainForm
                 StatusStrip.BackColor = Color.Red
         End Select
     End Sub
+
+   
 End Class
