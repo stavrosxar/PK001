@@ -699,7 +699,14 @@ Public Class MainForm
     End Sub
 
     Private Sub TestDBConnectionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestDBConnectionToolStripMenuItem.Click
-        DBFunctions.testConnectiivty()
+        'DBFunctions.testConnectiivty()
+        Dim result As Integer
+        result = con.testConnection()
+        If result = 1 Then
+            MsgBox("Connectivity OK")
+        Else
+            MsgBox("No Connection")
+        End If
     End Sub
 
     Private Sub TestSequenceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestSequenceToolStripMenuItem.Click
