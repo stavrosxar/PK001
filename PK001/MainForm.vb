@@ -726,7 +726,16 @@ Public Class MainForm
     End Sub
 
     Private Sub TestDBInsertFunctionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestDBInsertFunctionToolStripMenuItem.Click
-        Dim conResult = DBFunctions.insertToDB(1111, 100, 100, 100)
+        Dim newID As Double = con.getMaxID("table", "ID")
+        Dim sqlStr = "INSERT INTO PR_FYLWS_ATF_ROLLS " _
+             & "( ID, ATF_DTINS, ATF_ROLL_ACTUAL_WEIGHT, ATF_ROLL_ACTUAL_DIAM, ATF_ROLL_ACTUAL_WIDTH, ATF_ROLL_ACTUAL_LENGTH)" _
+             & "VALUES ( '" & newID & "', " _
+             & " SYSDATE, " _
+             & "' " & 100 & "', " _
+             & "' " & 101 & "', " _
+             & "' " & 102 & "'" & "')"
+        Dim conResult As Integer = con.insertSQL(sqlStr)
+
         'evaluate result
         Select Case conResult
             Case 0
