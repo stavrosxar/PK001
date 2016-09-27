@@ -28,7 +28,7 @@ Public Class MainForm
     Dim CurrentATFPalletID As Integer
     Public CurrentPalletID As Integer
     Dim con As DBLibraryClass
-    Dim DBSettings As DBLibrary.DBSettingsForm
+    Dim WithEvents DBSettings As DBLibrary.DBSettingsForm
 
     Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
         Me.Close()
@@ -751,6 +751,14 @@ Public Class MainForm
                 StatusStrip.BackColor = Color.Red
         End Select
     End Sub
-
+    Private Sub SettingsClosed(sender As Object, e As EventArgs) Handles DBSettings.FormClosed
+        Dim settingsList As List(Of String)
+        settingsList = dbSettings.returnSettings()
+        My.Settings.host = settingsList.Item(0)
+        My.Settings.port = settingsList.Item(1)
+        My.Settings.serviceName = settingsList.Item(2)
+        My.Settings.user = settingsList.Item(3)
+        My.Settings.password = settingsList.Item(4)
+    End Sub
    
 End Class
