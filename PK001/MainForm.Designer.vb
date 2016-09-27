@@ -54,6 +54,7 @@ Partial Class MainForm
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.PalletUpdate = New System.Windows.Forms.Timer(Me.components)
         Me.Button4 = New System.Windows.Forms.Button()
+        Me.dbCom = New System.Windows.Forms.Button()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.EventLog, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -253,11 +254,23 @@ Partial Class MainForm
         Me.Button4.Text = "Reset Result"
         Me.Button4.UseVisualStyleBackColor = True
         '
+        'dbCom
+        '
+        Me.dbCom.BackColor = System.Drawing.Color.Silver
+        Me.dbCom.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dbCom.Location = New System.Drawing.Point(331, 57)
+        Me.dbCom.Name = "dbCom"
+        Me.dbCom.Size = New System.Drawing.Size(197, 70)
+        Me.dbCom.TabIndex = 13
+        Me.dbCom.Text = "Start database Communication"
+        Me.dbCom.UseVisualStyleBackColor = False
+        '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(573, 377)
+        Me.Controls.Add(Me.dbCom)
         Me.Controls.Add(Me.Button4)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
@@ -308,5 +321,6 @@ Partial Class MainForm
     Friend WithEvents TestSequenceToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents TestDBConnectionToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents TestDBInsertFunctionToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents dbCom As System.Windows.Forms.Button
 
 End Class

@@ -760,5 +760,9 @@ Public Class MainForm
         My.Settings.user = settingsList.Item(3)
         My.Settings.password = settingsList.Item(4)
     End Sub
-   
+
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles dbCom.Click
+
+    End Sub
 End Class
