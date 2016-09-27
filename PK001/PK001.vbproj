@@ -85,12 +85,6 @@
     <Compile Include="COMSettings.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DBSettings.Designer.vb">
-      <DependentUpon>DBSettings.vb</DependentUpon>
-    </Compile>
-    <Compile Include="DBSettings.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="LogForm.Designer.vb">
       <DependentUpon>LogForm.vb</DependentUpon>
     </Compile>
@@ -129,9 +123,6 @@
   <ItemGroup>
     <EmbeddedResource Include="COMSettings.resx">
       <DependentUpon>COMSettings.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DBSettings.resx">
-      <DependentUpon>DBSettings.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LogForm.resx">
       <DependentUpon>LogForm.vb</DependentUpon>

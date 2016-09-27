@@ -28,7 +28,7 @@ Public Class MainForm
     Dim CurrentATFPalletID As Integer
     Public CurrentPalletID As Integer
     Dim con As DBLibraryClass
-
+    Dim DBSettings As DBLibrary.DBSettingsForm
 
     Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
         Me.Close()
@@ -486,6 +486,8 @@ Public Class MainForm
 
 
     Private Sub OracleDBConnectionSettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OracleDBConnectionSettingsToolStripMenuItem.Click
+        'DBSettings.Show()
+        DBSettings = New DBSettingsForm
         DBSettings.Show()
     End Sub
 
