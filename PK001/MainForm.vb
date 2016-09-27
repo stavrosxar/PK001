@@ -190,13 +190,22 @@ Public Class MainForm
     End Sub
 
     Private Sub writeEventToOracle(ByVal rollATFID As String, ByVal EventType As Integer)
-        Dim conResult = DBFunctions.insertEventToDB(rollATFID, EventType)
-        If conResult = 2 Then
+        'Dim conResult = DBFunctions.insertEventToDB(rollATFID, EventType)
+        Dim id = con.getMaxID("pr_FYLWS_ATF_events", "EVENTID")
+        Dim sqlStr = "INSERT INTO pr_FYLWS_ATF_events " _
+                 & "( EVENTID, ATF_ID, EVENT_TYPE, ATF_ROLLID, ATF_DTINS)" _
+                 & "VALUES ( " & id & ", " _
+                 & "ATF01," _
+                 & EventType & "," _
+                 & rollATFID & "," _
+                 & " SYSDATE)"
+        Dim insertResult As Integer = con.insertSQL(sqlStr)
+        If insertResult = 2 Then
             'MsgBox("Problem inserting data to Database")
             LogForm.log1("Problem writing event to Database")
             Exit Sub
         End If
-        If conResult = 0 Then
+        If insertResult = 0 Then
             LogForm.log1("Problem connecting to Database")
             Exit Sub
         End If
@@ -576,7 +585,21 @@ Public Class MainForm
             success = True
             CurrentATFPalletID = palletID.Value
             numberOfRollsOnPallet = palletRollsNumber.Value
-            writePalletToOracle("ATF01", palletID.Value, palletHeight.Value, palletWidth.Value, palletDepth.Value, palletWeight.Value, palletRollsNumber.Value, palletRollsWeight.Value)
+            'writePalletToOracle("ATF01", palletID.Value, palletHeight.Value, palletWidth.Value, palletDepth.Value, palletWeight.Value, palletRollsNumber.Value, palletRollsWeight.Value)
+            Dim id = con.getMaxID("pr_FYLWS_ATF_PltHdr", "pltID")
+            Dim sqlStr = "INSERT INTO pr_FYLWS_ATF_PltHdr " _
+                 & "( pltID, ATF_ID, plt_ATFID, ATF_plt_height_mm, ATF_plt_Width_mm, ATF_plt_Depth_mm, ATF_plt_Weight_kg, ATF_plt_Rolls_no, ATF_plt_Rolls_weight, DTINS)" _
+                 & "VALUES ( " & id & ", " _
+                 & "ATF01," _
+                 & palletID.Value & "," _
+                 & palletHeight.Value & "," _
+                 & palletWidth.Value & "," _
+                 & palletDepth.Value & "," _
+                 & palletWeight.Value & "," _
+                 & palletRollsNumber.Value & "," _
+                 & palletRollsWeight.Value & "," _
+                 & " SYSDATE)"
+            Dim insertResult As Integer = con.insertSQL(sqlStr)
         Catch ex As Exception
             EventLog.WriteEntry("Cannot retrieve values from PLC Msg= " + ex.ToString)
             success = False
@@ -621,7 +644,19 @@ Public Class MainForm
                 End Try
 
                 If successRoll Then
-                    writePalletRollToOracle(CurrentPalletID, "ATF01", CurrentATFPalletID, i, rollNumber.Value, rollWeight.Value, rollID.Value, rollLabel.Value)
+                    'writePalletRollToOracle(CurrentPalletID, "ATF01", CurrentATFPalletID, i, rollNumber.Value, rollWeight.Value, rollID.Value, rollLabel.Value)
+                    Dim sqlStr = "INSERT INTO pr_FYLWS_ATF_PltRoll " _
+                                & "( pltID, ATF_ID, ATF_pltID, ATF_pltroll_AddressNo, ATF_pltroll_Number, ATF_pltroll_weight, ATF_pltrollID, ATF_pltroll_No_label, DTINS)" _
+                                & "VALUES ( " & CurrentPalletID & ", " _
+                                & "ATF01," _
+                                & CurrentATFPalletID & "," _
+                                & i & "," _
+                                & rollNumber.Value & "," _
+                                & rollWeight.Value & "," _
+                                & rollID.Value & "," _
+                                & rollLabel.Value & "," _
+                                & " SYSDATE)"
+                    Dim insertResult As Integer = con.insertSQL(sqlStr)
                 End If
 
 
