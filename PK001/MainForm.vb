@@ -149,40 +149,44 @@ Public Class MainForm
         End Try
 
         If success Then
-            writeDatatoOracle(rollATFID.ValueAsString, rollWidth.Value, rollWeight.Value, rollDiameter.Value)
+            Dim newID As Double = con.getMaxID("PR_FYLWS_ATF_ROLLS", "ID")
+            Dim sqlStr = "INSERT INTO PR_FYLWS_ATF_ROLLS " _
+                 & "( ID, ATF_DTINS, ATF_ROLL_ACTUAL_WEIGHT, ATF_ROLL_ACTUAL_DIAM, ATF_ROLL_ACTUAL_WIDTH, ATF_ROLL_ACTUAL_LENGTH)" _
+                 & "VALUES ( '" & newID & "', " _
+                 & " SYSDATE, " _
+                 & "' " & rollWeight.Value & "', " _
+                 & "' " & rollDiameter.Value & "', " _
+                 & "' " & rollWidth.Value & "', " & "')"
+            Dim insertResult As Integer = con.insertSQL(sqlStr)
+       
+            If insertResult = 2 Then
+                MsgBox("Problem inserting data to Database")
+                writetoLog("Problem inserting data to Database")
+                '---test
+                rollUnderPrinter = False
+                WriteResultToPLC(0, 1, 2)
+                LogForm.log1("Error In DB")
+                LogForm.log1("Waiting for new roll")
+                Exit Sub
+            End If
+            If insertResult = 0 Then
+                MsgBox("Problem connecting to Database")
+                '--test
+                rollUnderPrinter = False
+                WriteResultToPLC(0, 1, 2)
+                LogForm.log1("Error In DB")
+                LogForm.log1("Waiting for new roll")
+                Exit Sub
+            End If
+            LogForm.log1("Write to DB completed")
+            applyLabelRequest = True
+            CommandSend = False
+            ' writeDatatoOracle(rollATFID.ValueAsString, rollWidth.Value, rollWeight.Value, rollDiameter.Value)
+            'initiatePrintSeq()
+        Else
+            LogForm.log1("Failed to read from PLC")
         End If
       
-    End Sub
-
-    Private Sub writeDatatoOracle(ByVal rollATFID As String, ByVal rollWidth As Integer, ByVal rollWeight As Double, ByVal rollDiameter As Integer)
-        'TODO  connect to Oracle and send the query to database
-        'then commit the changes
-        'after that start the sequence for applying the label
-        Dim conResult = DBFunctions.insertToDB(rollATFID, rollWidth, rollWeight, rollDiameter)
-        If conResult = 2 Then
-            MsgBox("Problem inserting data to Database")
-            writetoLog("Problem inserting data to Database")
-            '---test
-            rollUnderPrinter = False
-            WriteResultToPLC(0, 1, 2)
-            LogForm.log1("Error In DB")
-            LogForm.log1("Waiting for new roll")
-            Exit Sub
-        End If
-        If conResult = 0 Then
-            MsgBox("Problem connecting to Database")
-            '--test
-            rollUnderPrinter = False
-            WriteResultToPLC(0, 1, 2)
-            LogForm.log1("Error In DB")
-            LogForm.log1("Waiting for new roll")
-            Exit Sub
-        End If
-        LogForm.log1("Write to DB completed")
-        applyLabelRequest = True
-        CommandSend = False
-      
-        'initiatePrintSeq()
     End Sub
 
     Private Sub writeEventToOracle(ByVal rollATFID As String, ByVal EventType As Integer)
