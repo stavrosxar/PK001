@@ -1,6 +1,7 @@
 ﻿Imports DotNetSiemensPLCToolBoxLibrary.Communication
 Imports DotNetSiemensPLCToolBoxLibrary.DataTypes
 Imports DotNetSiemensPLCToolBoxLibrary
+Imports DBLibrary
 
 
 Public Class MainForm
@@ -26,6 +27,7 @@ Public Class MainForm
     Dim CurrentRollID As Integer
     Dim CurrentATFPalletID As Integer
     Public CurrentPalletID As Integer
+    Dim con As DBLibraryClass
 
 
     Private Sub ExitToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
@@ -41,7 +43,7 @@ Public Class MainForm
         EventLog.BeginInit()
         EventLog.Source = "PK-ATF"
         labelCheckCounter = 0
-
+        con = New DBLibraryClass(My.Settings.host, My.Settings.port, My.Settings.serviceName, My.Settings.user, My.Settings.password)
     End Sub
 
     Private Sub PLCConnectionSettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PLCConnectionSettingsToolStripMenuItem.Click
