@@ -32,6 +32,11 @@ Partial Class MainForm
         Me.PLCConnectionSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OracleDBConnectionSettingsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ShowLogToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ManualFunctionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PrinterToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TestSequenceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TestDBConnectionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.TestDBInsertFunctionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AboutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.SerialPort = New System.IO.Ports.SerialPort(Me.components)
         Me.StatusStrip = New System.Windows.Forms.StatusStrip()
@@ -39,13 +44,9 @@ Partial Class MainForm
         Me.PLCConn = New System.Windows.Forms.Button()
         Me.UIupdate = New System.Windows.Forms.Timer(Me.components)
         Me.PLCUpdate = New System.Windows.Forms.Timer(Me.components)
-        Me.Button1 = New System.Windows.Forms.Button()
         Me.ReceiveTxt = New System.Windows.Forms.TextBox()
         Me.SendTxt = New System.Windows.Forms.TextBox()
         Me.checkForLabelTimer = New System.Windows.Forms.Timer(Me.components)
-        Me.oracleTestbtn = New System.Windows.Forms.Button()
-        Me.Button2 = New System.Windows.Forms.Button()
-        Me.Button3 = New System.Windows.Forms.Button()
         Me.LabelStatusTxt = New System.Windows.Forms.TextBox()
         Me.TimerTick1sec = New System.Windows.Forms.Timer(Me.components)
         Me.Label1 = New System.Windows.Forms.Label()
@@ -59,7 +60,7 @@ Partial Class MainForm
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.SettingsToolStripMenuItem, Me.AboutToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.SettingsToolStripMenuItem, Me.ManualFunctionsToolStripMenuItem, Me.AboutToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(573, 24)
@@ -110,6 +111,37 @@ Partial Class MainForm
         Me.ShowLogToolStripMenuItem.Size = New System.Drawing.Size(245, 22)
         Me.ShowLogToolStripMenuItem.Text = "Show Log"
         '
+        'ManualFunctionsToolStripMenuItem
+        '
+        Me.ManualFunctionsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PrinterToolStripMenuItem, Me.TestSequenceToolStripMenuItem, Me.TestDBConnectionToolStripMenuItem, Me.TestDBInsertFunctionToolStripMenuItem})
+        Me.ManualFunctionsToolStripMenuItem.Name = "ManualFunctionsToolStripMenuItem"
+        Me.ManualFunctionsToolStripMenuItem.Size = New System.Drawing.Size(114, 20)
+        Me.ManualFunctionsToolStripMenuItem.Text = "Manual Functions"
+        '
+        'PrinterToolStripMenuItem
+        '
+        Me.PrinterToolStripMenuItem.Name = "PrinterToolStripMenuItem"
+        Me.PrinterToolStripMenuItem.Size = New System.Drawing.Size(194, 22)
+        Me.PrinterToolStripMenuItem.Text = "Labeler"
+        '
+        'TestSequenceToolStripMenuItem
+        '
+        Me.TestSequenceToolStripMenuItem.Name = "TestSequenceToolStripMenuItem"
+        Me.TestSequenceToolStripMenuItem.Size = New System.Drawing.Size(194, 22)
+        Me.TestSequenceToolStripMenuItem.Text = "Test Sequence"
+        '
+        'TestDBConnectionToolStripMenuItem
+        '
+        Me.TestDBConnectionToolStripMenuItem.Name = "TestDBConnectionToolStripMenuItem"
+        Me.TestDBConnectionToolStripMenuItem.Size = New System.Drawing.Size(194, 22)
+        Me.TestDBConnectionToolStripMenuItem.Text = "Test DB Connection"
+        '
+        'TestDBInsertFunctionToolStripMenuItem
+        '
+        Me.TestDBInsertFunctionToolStripMenuItem.Name = "TestDBInsertFunctionToolStripMenuItem"
+        Me.TestDBInsertFunctionToolStripMenuItem.Size = New System.Drawing.Size(194, 22)
+        Me.TestDBInsertFunctionToolStripMenuItem.Text = "Test DB insert function"
+        '
         'AboutToolStripMenuItem
         '
         Me.AboutToolStripMenuItem.Name = "AboutToolStripMenuItem"
@@ -153,16 +185,6 @@ Partial Class MainForm
         '
         Me.PLCUpdate.Interval = 1000
         '
-        'Button1
-        '
-        Me.Button1.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button1.Location = New System.Drawing.Point(312, 57)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(197, 70)
-        Me.Button1.TabIndex = 3
-        Me.Button1.Text = "Printer Manual  Functions"
-        Me.Button1.UseVisualStyleBackColor = True
-        '
         'ReceiveTxt
         '
         Me.ReceiveTxt.ForeColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
@@ -183,35 +205,6 @@ Partial Class MainForm
         'checkForLabelTimer
         '
         Me.checkForLabelTimer.Interval = 2000
-        '
-        'oracleTestbtn
-        '
-        Me.oracleTestbtn.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.oracleTestbtn.Location = New System.Drawing.Point(54, 145)
-        Me.oracleTestbtn.Name = "oracleTestbtn"
-        Me.oracleTestbtn.Size = New System.Drawing.Size(194, 59)
-        Me.oracleTestbtn.TabIndex = 6
-        Me.oracleTestbtn.Text = "Test Oracle Connection"
-        Me.oracleTestbtn.UseVisualStyleBackColor = True
-        '
-        'Button2
-        '
-        Me.Button2.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Button2.Location = New System.Drawing.Point(315, 145)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(194, 59)
-        Me.Button2.TabIndex = 7
-        Me.Button2.Text = "Test Sequence"
-        Me.Button2.UseVisualStyleBackColor = True
-        '
-        'Button3
-        '
-        Me.Button3.Location = New System.Drawing.Point(312, 230)
-        Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(196, 37)
-        Me.Button3.TabIndex = 8
-        Me.Button3.Text = "Test DB write query"
-        Me.Button3.UseVisualStyleBackColor = True
         '
         'LabelStatusTxt
         '
@@ -269,12 +262,8 @@ Partial Class MainForm
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.LabelStatusTxt)
-        Me.Controls.Add(Me.Button3)
-        Me.Controls.Add(Me.Button2)
-        Me.Controls.Add(Me.oracleTestbtn)
         Me.Controls.Add(Me.SendTxt)
         Me.Controls.Add(Me.ReceiveTxt)
-        Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.PLCConn)
         Me.Controls.Add(Me.StatusStrip)
         Me.Controls.Add(Me.MenuStrip1)
@@ -302,14 +291,10 @@ Partial Class MainForm
     Friend WithEvents PLCConn As System.Windows.Forms.Button
     Friend WithEvents UIupdate As System.Windows.Forms.Timer
     Friend WithEvents PLCUpdate As System.Windows.Forms.Timer
-    Friend WithEvents Button1 As System.Windows.Forms.Button
     Friend WithEvents SendTxt As System.Windows.Forms.TextBox
     Friend WithEvents ReceiveTxt As System.Windows.Forms.TextBox
     Friend WithEvents checkForLabelTimer As System.Windows.Forms.Timer
-    Friend WithEvents oracleTestbtn As System.Windows.Forms.Button
     Friend WithEvents OracleDBConnectionSettingsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents Button2 As System.Windows.Forms.Button
-    Friend WithEvents Button3 As System.Windows.Forms.Button
     Friend WithEvents LabelStatusTxt As System.Windows.Forms.TextBox
     Friend WithEvents TimerTick1sec As System.Windows.Forms.Timer
     Friend WithEvents Label1 As System.Windows.Forms.Label
@@ -318,5 +303,10 @@ Partial Class MainForm
     Friend WithEvents PalletUpdate As System.Windows.Forms.Timer
     Friend WithEvents ShowLogToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Button4 As System.Windows.Forms.Button
+    Friend WithEvents ManualFunctionsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents PrinterToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents TestSequenceToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents TestDBConnectionToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents TestDBInsertFunctionToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
 
 End Class

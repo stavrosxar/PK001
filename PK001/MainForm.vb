@@ -384,9 +384,6 @@ Public Class MainForm
 
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        PrinterManual.Show()
-    End Sub
 
     Public Sub initiatePrintSeq()
         If applyLabelRequest = False Then
@@ -471,46 +468,17 @@ Public Class MainForm
         End If
     End Sub
 
-    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles oracleTestbtn.Click
-        DBFunctions.testConnectiivty()
-
-    End Sub
 
     Private Sub OracleDBConnectionSettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OracleDBConnectionSettingsToolStripMenuItem.Click
         DBSettings.Show()
     End Sub
-
-    Private Sub Button2_Click_1(sender As Object, e As EventArgs) Handles Button2.Click
-        applyLabelRequest = True
-        CommandSend = False
-        initiatePrintSeq()
-
-
-    End Sub
-
 
     Public Function writetoLog(ByVal str As String)
         ' EventLog.WriteEntry(str)
         Return 0
     End Function
 
-    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-        Dim conResult = DBFunctions.insertToDB(1111, 100, 100, 100)
-        'evaluate result
-        Select Case conResult
-            Case 0
-                StatusStrip.Text = "Failed to connect to Database. Review Log"
-                StatusStrip.BackColor = Color.Red
-            Case 1
-                StatusStrip.Text = "Transaction with Database succesfull"
-                StatusStrip.BackColor = Color.Green
-            Case 2
-                StatusStrip.Text = "Failed to finish transaction. Review Log"
-                StatusStrip.BackColor = Color.Red
-        End Select
-
-
-    End Sub
+    
 
     Private Sub TimerTick1sec_Tick(sender As Object, e As EventArgs) Handles TimerTick1sec.Tick
         If timer100sec Then
@@ -717,5 +685,35 @@ Public Class MainForm
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
         WriteResultToPLC(0, 0, 1)
+    End Sub
+
+    Private Sub PrinterToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrinterToolStripMenuItem.Click
+        PrinterManual.Show()
+    End Sub
+
+    Private Sub TestDBConnectionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestDBConnectionToolStripMenuItem.Click
+        DBFunctions.testConnectiivty()
+    End Sub
+
+    Private Sub TestSequenceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestSequenceToolStripMenuItem.Click
+        applyLabelRequest = True
+        CommandSend = False
+        initiatePrintSeq()
+    End Sub
+
+    Private Sub TestDBInsertFunctionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestDBInsertFunctionToolStripMenuItem.Click
+        Dim conResult = DBFunctions.insertToDB(1111, 100, 100, 100)
+        'evaluate result
+        Select Case conResult
+            Case 0
+                StatusStrip.Text = "Failed to connect to Database. Review Log"
+                StatusStrip.BackColor = Color.Red
+            Case 1
+                StatusStrip.Text = "Transaction with Database succesfull"
+                StatusStrip.BackColor = Color.Green
+            Case 2
+                StatusStrip.Text = "Failed to finish transaction. Review Log"
+                StatusStrip.BackColor = Color.Red
+        End Select
     End Sub
 End Class

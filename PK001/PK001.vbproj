@@ -47,6 +47,9 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DBLibrary">
+      <HintPath>..\..\DBLibrary\DBLibrary\bin\Debug\DBLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="DotNetSiemensPLCToolBoxLibrary">
       <HintPath>.\DotNetSiemensPLCToolBoxLibrary.dll</HintPath>
     </Reference>
