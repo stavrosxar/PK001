@@ -53,6 +53,9 @@ Partial Class MainForm
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.PalletUpdate = New System.Windows.Forms.Timer(Me.components)
         Me.Button4 = New System.Windows.Forms.Button()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.TimerForFailure = New System.Windows.Forms.Timer(Me.components)
+        Me.enablePalletBtn = New System.Windows.Forms.Button()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.EventLog, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -62,7 +65,7 @@ Partial Class MainForm
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.SettingsToolStripMenuItem, Me.AboutToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(573, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(578, 24)
         Me.MenuStrip1.TabIndex = 0
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -123,9 +126,9 @@ Partial Class MainForm
         '
         'StatusStrip
         '
-        Me.StatusStrip.Location = New System.Drawing.Point(0, 355)
+        Me.StatusStrip.Location = New System.Drawing.Point(0, 411)
         Me.StatusStrip.Name = "StatusStrip"
-        Me.StatusStrip.Size = New System.Drawing.Size(573, 22)
+        Me.StatusStrip.Size = New System.Drawing.Size(578, 22)
         Me.StatusStrip.TabIndex = 1
         Me.StatusStrip.Text = "StatusStrip1"
         '
@@ -166,16 +169,16 @@ Partial Class MainForm
         'ReceiveTxt
         '
         Me.ReceiveTxt.ForeColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.ReceiveTxt.Location = New System.Drawing.Point(11, 299)
+        Me.ReceiveTxt.Location = New System.Drawing.Point(12, 356)
         Me.ReceiveTxt.Name = "ReceiveTxt"
         Me.ReceiveTxt.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.ReceiveTxt.Size = New System.Drawing.Size(553, 20)
+        Me.ReceiveTxt.Size = New System.Drawing.Size(552, 20)
         Me.ReceiveTxt.TabIndex = 4
         '
         'SendTxt
         '
         Me.SendTxt.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.SendTxt.Location = New System.Drawing.Point(12, 273)
+        Me.SendTxt.Location = New System.Drawing.Point(12, 330)
         Me.SendTxt.Name = "SendTxt"
         Me.SendTxt.Size = New System.Drawing.Size(552, 20)
         Me.SendTxt.TabIndex = 5
@@ -206,7 +209,7 @@ Partial Class MainForm
         '
         'Button3
         '
-        Me.Button3.Location = New System.Drawing.Point(312, 230)
+        Me.Button3.Location = New System.Drawing.Point(315, 287)
         Me.Button3.Name = "Button3"
         Me.Button3.Size = New System.Drawing.Size(196, 37)
         Me.Button3.TabIndex = 8
@@ -216,10 +219,10 @@ Partial Class MainForm
         'LabelStatusTxt
         '
         Me.LabelStatusTxt.ForeColor = System.Drawing.Color.FromArgb(CType(CType(192, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.LabelStatusTxt.Location = New System.Drawing.Point(11, 325)
+        Me.LabelStatusTxt.Location = New System.Drawing.Point(12, 382)
         Me.LabelStatusTxt.Name = "LabelStatusTxt"
         Me.LabelStatusTxt.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.LabelStatusTxt.Size = New System.Drawing.Size(553, 20)
+        Me.LabelStatusTxt.Size = New System.Drawing.Size(552, 20)
         Me.LabelStatusTxt.TabIndex = 9
         '
         'TimerTick1sec
@@ -229,7 +232,7 @@ Partial Class MainForm
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(525, 242)
+        Me.Label1.Location = New System.Drawing.Point(528, 299)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(39, 13)
         Me.Label1.TabIndex = 10
@@ -238,7 +241,7 @@ Partial Class MainForm
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(528, 196)
+        Me.Label2.Location = New System.Drawing.Point(531, 253)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(0, 13)
         Me.Label2.TabIndex = 11
@@ -253,18 +256,43 @@ Partial Class MainForm
         '
         'Button4
         '
-        Me.Button4.Location = New System.Drawing.Point(33, 226)
+        Me.Button4.Location = New System.Drawing.Point(54, 283)
         Me.Button4.Name = "Button4"
-        Me.Button4.Size = New System.Drawing.Size(251, 40)
+        Me.Button4.Size = New System.Drawing.Size(194, 40)
         Me.Button4.TabIndex = 12
         Me.Button4.Text = "Reset Result"
         Me.Button4.UseVisualStyleBackColor = True
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(442, 30)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(62, 13)
+        Me.Label3.TabIndex = 13
+        Me.Label3.Text = "V20170114"
+        '
+        'TimerForFailure
+        '
+        Me.TimerForFailure.Interval = 1000
+        '
+        'enablePalletBtn
+        '
+        Me.enablePalletBtn.Font = New System.Drawing.Font("Microsoft Sans Serif", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.enablePalletBtn.Location = New System.Drawing.Point(57, 210)
+        Me.enablePalletBtn.Name = "enablePalletBtn"
+        Me.enablePalletBtn.Size = New System.Drawing.Size(194, 59)
+        Me.enablePalletBtn.TabIndex = 14
+        Me.enablePalletBtn.Text = "Enable Pallet Reading"
+        Me.enablePalletBtn.UseVisualStyleBackColor = True
         '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(573, 377)
+        Me.ClientSize = New System.Drawing.Size(578, 433)
+        Me.Controls.Add(Me.enablePalletBtn)
+        Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Button4)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
@@ -318,5 +346,8 @@ Partial Class MainForm
     Friend WithEvents PalletUpdate As System.Windows.Forms.Timer
     Friend WithEvents ShowLogToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Button4 As System.Windows.Forms.Button
+    Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents TimerForFailure As System.Windows.Forms.Timer
+    Friend WithEvents enablePalletBtn As System.Windows.Forms.Button
 
 End Class

@@ -42,6 +42,7 @@ Public Class MainForm
         EventLog.Source = "PK-ATF"
         labelCheckCounter = 0
         DBFunctions.connectToDB()
+
     End Sub
 
     Private Sub PLCConnectionSettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PLCConnectionSettingsToolStripMenuItem.Click
@@ -65,7 +66,8 @@ Public Class MainForm
                 myConn.Connect()
                 PLCUpdate.Enabled = True
                 'PalletUpdate.Enabled = True
-                LogForm.log1("Enable PLC Update")
+                TimerForFailure.Enabled = True
+                LogForm.log1("Enable PLC and failure Update")
                 PLCConn.Text = "Stop PLC Communication"
             Catch ex As Exception
                 MsgBox("No connection could be made. Please check your settings")
@@ -202,6 +204,7 @@ Public Class MainForm
             Dim incoming As String = SerialPort.ReadExisting
             ReceiveTxt.Text = incoming
             SerialInputManipulation(incoming)
+            LogForm.log1(incoming)
         Catch ex As Exception
             EventLog.WriteEntry("Cannot read Serial Port. Msg=" + ex.ToString)
             Exit Sub
@@ -318,8 +321,17 @@ Public Class MainForm
 
                     End Try
                     applyLabelStatus = 0
+                    Label2.Text = 0
                     LogForm.log1("Waiting for new roll")
                     LabelStatusTxt.Text = "Cycle completed with error. Waiting for new roll"
+                    applyLabelStatus = 0
+                    Label2.Text = applyLabelStatus
+                    'reset label request
+                    applyLabelRequest = False
+                    'listen again for new roll under printer
+                    rollUnderPrinter = False
+                    'reset any errors if any
+                    SendSerialData("|01RE" + Chr(13))
                 End If
                 Exit Sub
             End If
@@ -412,8 +424,38 @@ Public Class MainForm
 
         If applyLabelRequest And applyLabelStatus = 1 And timer100sec Then
             'send command to check for label on pad
+            labelCheckCounter = labelCheckCounter + 1
             SendSerialData("|01RI" + Chr(13))
             LabelStatusTxt.Text = "send command to check for label on pad"
+            LogForm.log1("Send command for check label")
+            If labelCheckCounter = 7 Then
+                applyLabelRequest = False
+                applyLabelStatus = 0
+                StatusStrip.Text = "No label found on the pad after 15 seconds"
+
+                LogForm.log1("No label found on the pad after 15 seconds")
+                LogForm.log1("Waiting for new roll")
+                Dim val1 As New Communication.PLCTag("DB98.DBW20")
+                Dim val2 As New Communication.PLCTag("DB98.DBW22") 'error in printing tag
+                val1.Controlvalue = 0
+                val2.Controlvalue = 1
+                writeEventToOracle(CurrentRollID, 2)
+                Try
+                    myConn.WriteValue(val1)
+                    myConn.WriteValue(val2)
+                Catch ex As Exception
+
+                End Try
+                applyLabelStatus = 0
+                Label2.Text = applyLabelStatus
+                labelCheckCounter = 0
+                'reset label request
+                applyLabelRequest = False
+                'listen again for new roll under printer
+                rollUnderPrinter = False
+                'reset any errors if any
+                SendSerialData("|01RE" + Chr(13))
+            End If
 
         End If
 
@@ -566,6 +608,8 @@ Public Class MainForm
 
         Else
             PalletUpdate.Enabled = False
+            enablePalletBtn.Text = "Enable Pallet Update"
+            enablePalletBtn.BackColor = Color.Silver
         End If
 
     End Sub
@@ -736,5 +780,53 @@ Public Class MainForm
 
     Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
 
+    End Sub
+
+    Private Sub Label3_Click(sender As Object, e As EventArgs) Handles Label3.Click
+
+    End Sub
+
+    Private Sub TimerForFailure_Tick(sender As Object, e As EventArgs) Handles TimerForFailure.Tick
+        Dim failure As New Communication.PLCTag("DB98.DBW22")
+        failure.DataTypeStringFormat = TagDisplayDataType.Decimal
+        If myConn.Connected Then
+            myConn.ReadValue(failure)
+            If failure.Value = 1 Then
+                Dim val1 As New Communication.PLCTag("DB98.DBW20")
+                val1.Controlvalue = 1
+                Try
+                    myConn.WriteValue(val1)
+
+                Catch ex As Exception
+
+                End Try
+                applyLabelStatus = 0
+                Label2.Text = applyLabelStatus
+                labelCheckCounter = 0
+                'reset label request
+                applyLabelRequest = False
+                'listen again for new roll under printer
+                rollUnderPrinter = False
+                'reset any errors if any
+                SendSerialData("|01RE" + Chr(13))
+                LogForm.log1("Time out from ATF PLC. Waiting for new roll")
+
+            End If
+        End If
+
+    End Sub
+
+   
+    Private Sub enablePalletBtn_Click(sender As Object, e As EventArgs) Handles enablePalletBtn.Click
+        If PalletUpdate.Enabled Then
+            PalletUpdate.Enabled = False
+            enablePalletBtn.Text = "Enable Pallet Update"
+            enablePalletBtn.BackColor = Color.Silver
+
+        Else
+            PalletUpdate.Enabled = True
+            enablePalletBtn.Text = "Disable Pallet Update"
+            enablePalletBtn.BackColor = Color.Lime
+        End If
     End Sub
 End Class
