@@ -41,6 +41,7 @@ Public Class MainForm
         EventLog.BeginInit()
         EventLog.Source = "PK-ATF"
         labelCheckCounter = 0
+        DBFunctions.connectToDB()
     End Sub
 
     Private Sub PLCConnectionSettingsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PLCConnectionSettingsToolStripMenuItem.Click
@@ -63,6 +64,7 @@ Public Class MainForm
             Try
                 myConn.Connect()
                 PLCUpdate.Enabled = True
+                'PalletUpdate.Enabled = True
                 LogForm.log1("Enable PLC Update")
                 PLCConn.Text = "Stop PLC Communication"
             Catch ex As Exception
@@ -91,7 +93,7 @@ Public Class MainForm
     Private Sub PLCUpdate_Tick(sender As Object, e As EventArgs) Handles PLCUpdate.Tick
         Dim printReadyTag As New Communication.PLCTag("DB98.DBW0")
         printReadyTag.DataTypeStringFormat = TagDisplayDataType.Decimal
-               If myConn.Connected Then
+        If myConn.Connected Then
             myConn.ReadValue(printReadyTag)
 
             If rollUnderPrinter Then
@@ -242,6 +244,7 @@ Public Class MainForm
 
         'MsgBox(str)
         'Standar and typical replies
+        LogForm.log1("Reply =" & typeofReply & "SubString =" & str)
         Select Case str
             Case "|01SO0" + Chr(13) ' blow is disabled
                 blowStatus = False
@@ -314,6 +317,9 @@ Public Class MainForm
                     Catch ex As Exception
 
                     End Try
+                    applyLabelStatus = 0
+                    LogForm.log1("Waiting for new roll")
+                    LabelStatusTxt.Text = "Cycle completed with error. Waiting for new roll"
                 End If
                 Exit Sub
             End If
@@ -365,6 +371,7 @@ Public Class MainForm
             ' debug code leave it as it is
             ' Dim DECcodeofInputs = Convert.ToInt32(HEXcodeOfInputs, 16)
             ' MsgBox(HEXcodeOfInputs)
+            LogForm.log1("Input= " & HEXcodeOfInputs)
             If applyLabelRequest Then
                 If HEXcodeOfInputs = 5 Then
                     'this means that a label is on pad so we can continue
@@ -373,11 +380,13 @@ Public Class MainForm
                     checkForLabelTimer.Enabled = False
                     labelCheckCounter = 0
                 Else
-                    'start a 2sec loop for checking the status of the inputs until label is on the pad
-                    'or a specific ammount of tries has passed i.e 20 times = 20 x 2 sec = 40sec waiting for 
-                    checkForLabelTimer.Enabled = True
+                    'start a 1sec loop for checking the status of the inputs until label is on the pad
+                    'or a specific ammount of tries has passed i.e 20 times = 15 x 1 sec = 15sec waiting for 
+                    If checkForLabelTimer.Enabled = False Then
+                        checkForLabelTimer.Enabled = True
+                        LogForm.log1("Check for label enabled")
+                    End If
                 End If
-
             End If
 
         End If
@@ -465,9 +474,15 @@ Public Class MainForm
         SendSerialData("|01RI" + Chr(13))
         labelCheckCounter = labelCheckCounter + 1
         StatusStrip.Text = "Waiting for label on pad"
-        If labelCheckCounter = 20 Then
+
+        LogForm.log1("Waiting sec = " & labelCheckCounter)
+        If labelCheckCounter = 15 Then
             applyLabelRequest = False
-            StatusStrip.Text = "No label found on the pad after 40 seconds"
+            applyLabelStatus = 0
+            StatusStrip.Text = "No label found on the pad after 15 seconds"
+
+            LogForm.log1("No label found on the pad after 15 seconds")
+            LogForm.log1("Waiting for new roll")
         End If
     End Sub
 
@@ -550,7 +565,7 @@ Public Class MainForm
             End If
 
         Else
-            PLCUpdate.Enabled = False
+            PalletUpdate.Enabled = False
         End If
 
     End Sub
@@ -717,5 +732,9 @@ Public Class MainForm
 
     Private Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
         WriteResultToPLC(0, 0, 1)
+    End Sub
+
+    Private Sub AboutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AboutToolStripMenuItem.Click
+
     End Sub
 End Class

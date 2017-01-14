@@ -75,7 +75,7 @@
         Return result
     End Function
 
-    Private Function connectToDB() As Integer
+    Public Function connectToDB() As Integer
         Dim strCon
         Dim result As Integer
         strCon = "Driver={Microsoft ODBC for Oracle}; " & _

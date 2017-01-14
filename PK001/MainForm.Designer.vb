@@ -182,7 +182,7 @@ Partial Class MainForm
         '
         'checkForLabelTimer
         '
-        Me.checkForLabelTimer.Interval = 2000
+        Me.checkForLabelTimer.Interval = 1000
         '
         'oracleTestbtn
         '
