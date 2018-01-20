@@ -27,7 +27,7 @@
         Return 0
     End Function
 
-    Public Function insertToDB(ByVal rollATFID As Integer, ByVal rollWidth As Integer, ByVal rollWeight As Integer, ByVal rollDiameter As Integer) As Integer
+    Public Function insertToDB(ByVal rollATFID As Integer, ByVal rollWidth As Integer, ByVal rollWeight As Double, ByVal rollDiameter As Integer) As Integer
         Dim result As Integer
         Dim strSql As String
         Dim id As Double
@@ -217,7 +217,7 @@
         Return result
     End Function
 
-    Public Function writePalletToDB(ByVal ATFPalletID As Integer, ByVal palletHeight As Integer, ByVal palletWidth As Integer, ByVal palletDepth As Integer, ByVal palletWeight As Integer, ByVal palletRollsNo As Integer, ByVal palletRollsWeight As Integer) As Integer
+    Public Function writePalletToDB(ByVal ATFPalletID As Integer, ByVal palletHeight As Integer, ByVal palletWidth As Integer, ByVal palletDepth As Integer, ByVal palletWeight As Double, ByVal palletRollsNo As Integer, ByVal palletRollsWeight As Integer) As Integer
         Dim result As Integer
         Dim strSql As String
         Dim id As Double
@@ -262,7 +262,7 @@
         Return result
     End Function
 
-    Public Function writePalletRollToDB(ByVal pltID As Integer, ByVal ATFpalletID As Integer, ByVal ATF_pltroll_AddressNo As Integer, ByVal ATF_pltroll_Number As Integer, ByVal ATF_pltroll_weight As Integer, ByVal ATF_pltrollID As Integer, ByVal ATF_pltroll_No_label As Integer) As Integer
+    Public Function writePalletRollToDB(ByVal pltID As Integer, ByVal ATFpalletID As Integer, ByVal ATF_pltroll_AddressNo As Integer, ByVal ATF_pltroll_Number As Integer, ByVal ATF_pltroll_weight As Double, ByVal ATF_pltrollID As Integer, ByVal ATF_pltroll_No_label As Integer) As Integer
         Dim result As Integer
         Dim strSql As String
         strSql = "INSERT INTO pr_FYLWS_ATF_PltRoll " _

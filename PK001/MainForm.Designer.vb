@@ -48,7 +48,6 @@ Partial Class MainForm
         Me.Button3 = New System.Windows.Forms.Button()
         Me.LabelStatusTxt = New System.Windows.Forms.TextBox()
         Me.TimerTick1sec = New System.Windows.Forms.Timer(Me.components)
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
         Me.PalletUpdate = New System.Windows.Forms.Timer(Me.components)
@@ -229,15 +228,6 @@ Partial Class MainForm
         '
         Me.TimerTick1sec.Interval = 3000
         '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(528, 299)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(39, 13)
-        Me.Label1.TabIndex = 10
-        Me.Label1.Text = "Label1"
-        '
         'Label2
         '
         Me.Label2.AutoSize = True
@@ -270,7 +260,7 @@ Partial Class MainForm
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(62, 13)
         Me.Label3.TabIndex = 13
-        Me.Label3.Text = "V20170114"
+        Me.Label3.Text = "V20180120"
         '
         'TimerForFailure
         '
@@ -295,7 +285,6 @@ Partial Class MainForm
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Button4)
         Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.LabelStatusTxt)
         Me.Controls.Add(Me.Button3)
         Me.Controls.Add(Me.Button2)
@@ -340,7 +329,6 @@ Partial Class MainForm
     Friend WithEvents Button3 As System.Windows.Forms.Button
     Friend WithEvents LabelStatusTxt As System.Windows.Forms.TextBox
     Friend WithEvents TimerTick1sec As System.Windows.Forms.Timer
-    Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Timer1 As System.Windows.Forms.Timer
     Friend WithEvents PalletUpdate As System.Windows.Forms.Timer

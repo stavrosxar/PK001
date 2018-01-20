@@ -572,10 +572,10 @@ Public Class MainForm
     Private Sub TimerTick1sec_Tick(sender As Object, e As EventArgs) Handles TimerTick1sec.Tick
         If timer100sec Then
             timer100sec = False
-            Label1.Text = "0"
+            'Label1.Text = "0"
         Else
             timer100sec = True
-            Label1.Text = "1"
+            ' Label1.Text = "1"
             initiatePrintSeq()
         End If
     End Sub
